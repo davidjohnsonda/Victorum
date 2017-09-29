@@ -8,6 +8,10 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Api" />
-    <orderEntry type="library" name="jMonkeyEngine" level="project" />
+    <orderEntry type="library" exported="" name="jMonkeyEngine" level="project" />
+    <orderEntry type="library" exported="" name="guava" level="project" />
+    <orderEntry type="library" exported="" name="jMonkeyEngine-clientLibs" level="project" />
+    <orderEntry type="library" exported="" name="lemur" level="project" />
+    <orderEntry type="library" exported="" name="slf4j" level="project" />
   </component>
 </module>

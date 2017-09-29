@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lemur">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/libs/lemur" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/libs/lemur" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/libs/lemur" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/libs/lemur" recursive="false" type="SOURCES" />
+  </library>
+</component>
