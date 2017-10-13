@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Api/Api.iml" filepath="$PROJECT_DIR$/Api/Api.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ClientEngine/ClientEngine.iml" filepath="$PROJECT_DIR$/ClientEngine/ClientEngine.iml" />
-      <module fileurl="file://$PROJECT_DIR$/CommonEngine/CommonEngine.iml" filepath="$PROJECT_DIR$/CommonEngine/CommonEngine.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ServerEngine/ServerEngine.iml" filepath="$PROJECT_DIR$/ServerEngine/ServerEngine.iml" />
-      <module fileurl="file://$PROJECT_DIR$/VictorumMod/VictorumMod.iml" filepath="$PROJECT_DIR$/VictorumMod/VictorumMod.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Victorum.iml" filepath="$PROJECT_DIR$/Victorum.iml" />
     </modules>
   </component>
 </project>

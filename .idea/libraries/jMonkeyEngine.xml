@@ -65,6 +65,9 @@
       <root url="jar://$PROJECT_DIR$/libs/jmonkeyengine/simple.jar!/" />
       <root url="jar://$PROJECT_DIR$/libs/jmonkeyengine/vecmath.jar!/" />
       <root url="jar://$PROJECT_DIR$/libs/jmonkeyengine/xpp3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jmonkeyengine/lwjgl-platform-natives-linux.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jmonkeyengine/lwjgl-platform-natives-osx.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jmonkeyengine/lwjgl-platform-natives-windows.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
