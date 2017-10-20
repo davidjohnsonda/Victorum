@@ -7,6 +7,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
 
+import io.github.victorum.util.ThreadingUtil;
 import io.github.victorum.util.VAppState;
 
 import java.util.HashMap;
@@ -43,7 +44,7 @@ public class WorldAppState extends VAppState{
     @Override protected void onEnable(){}
     @Override protected void onDisable(){}
 
-    protected synchronized void doChunkTick(){
+    protected void doChunkTick(){
         int ccx, ccz;
         for(ccx=0;ccx<World.WORLD_SIZE_IN_CHUNKS;++ccx){
             for(ccz=0;ccz<World.WORLD_SIZE_IN_CHUNKS;++ccz){
@@ -61,42 +62,34 @@ public class WorldAppState extends VAppState{
     }
 
     private void requestChunkData(Chunk chunk){
-        System.out.println("Requesting Chunk Data: " + chunk.getChunkCoordinates());
         chunk.setStatus(ChunkStatus.AWAITING_DATA);
-        //ThreadingUtil.EXECUTOR_SERVICE.submit(() -> loadChunkData(chunk));
-        loadChunkData(chunk);
+        ThreadingUtil.EXECUTOR_SERVICE.submit(() -> loadChunkData(chunk));
+        //loadChunkData(chunk);
     }
 
     private void requestMeshRefresh(Chunk chunk){
-        System.out.println("Requesting Mesh Refresh: " + chunk.getChunkCoordinates());
         chunk.setStatus(ChunkStatus.AWAITING_MESH_REFRESH);
-        //ThreadingUtil.EXECUTOR_SERVICE.submit(() -> refreshChunkMesh(chunk));
-        refreshChunkMesh(chunk);
+        ThreadingUtil.EXECUTOR_SERVICE.submit(() -> refreshChunkMesh(chunk));
+        //refreshChunkMesh(chunk);
     }
 
     private void loadChunkData(Chunk chunk){
-        System.out.println("Generating Chunk: " + chunk.getChunkCoordinates());
         worldGenerator.generateChunk(chunk);
         chunk.setStatus(ChunkStatus.HOLDING_DATA);
     }
 
     private void refreshChunkMesh(Chunk chunk){
-        System.out.println("Generating mesh: " + chunk.getChunkCoordinates());
         ChunkMeshGenerator chunkMeshGenerator = new ChunkMeshGenerator(chunk);
         chunkMeshGenerator.generateMesh();
         getVictorum().enqueue(() -> updateMeshInScenegraph(chunk, chunkMeshGenerator));
         chunk.setStatus(ChunkStatus.IDLE);
     }
 
-    private synchronized void updateMeshInScenegraph(Chunk chunk, ChunkMeshGenerator generator){
+    private void updateMeshInScenegraph(Chunk chunk, ChunkMeshGenerator generator){
         Geometry geometry = chunkMeshes.get(chunk.getChunkCoordinates());
 
         if(geometry == null){
-            Mesh mesh = new Mesh();
-            generator.applyToMeshObject(mesh);
-            mesh.updateBound();
-
-            geometry = new Geometry("Chunk", mesh);
+            geometry = new Geometry("Chunk", generator.getMesh());
             geometry.setMaterial(chunkMaterial);
             geometry.setLocalTranslation(
                 chunk.getChunkCoordinates().getChunkX()*Chunk.CHUNK_SIZE,
@@ -104,16 +97,12 @@ public class WorldAppState extends VAppState{
                 chunk.getChunkCoordinates().getChunkZ()*Chunk.CHUNK_SIZE
             );
             getVictorum().getRootNode().attachChild(geometry);
-            geometry.updateModelBound();
 
             chunkMeshes.put(chunk.getChunkCoordinates(), geometry);
 
-
-
             System.out.println("Showing mesh: " + chunk.getChunkCoordinates());
         }else{
-            generator.applyToMeshObject(geometry.getMesh());
-            geometry.updateModelBound();
+            geometry.setMesh(generator.getMesh());
         }
     }
 

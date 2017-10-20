@@ -6,7 +6,7 @@ import io.github.victorum.block.BlockType;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
 public class Chunk{
-    public static int CHUNK_SIZE = 32;
+    public static int CHUNK_SIZE = 16;
     public static int CHUNK_HEIGHT = 256;
     private final ChunkCoordinates chunkCoordinates;
     private final AtomicIntegerArray blockTypeData = new AtomicIntegerArray(CHUNK_SIZE*CHUNK_SIZE*CHUNK_HEIGHT);

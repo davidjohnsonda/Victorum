@@ -3,7 +3,7 @@ package io.github.victorum.world;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class World{
-    public static final int WORLD_SIZE_IN_CHUNKS = 2;
+    public static final int WORLD_SIZE_IN_CHUNKS = 32;
     private final ConcurrentHashMap<ChunkCoordinates, Chunk> chunkData = new ConcurrentHashMap<>();
 
     public Chunk getChunk(int chunkX, int chunkZ){

@@ -2,9 +2,9 @@ package io.github.victorum.world;
 
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Mesh;
-
 import com.jme3.scene.VertexBuffer;
 import com.jme3.util.BufferUtils;
+
 import io.github.victorum.block.BlockRegistry;
 import io.github.victorum.block.BlockType;
 
@@ -21,11 +21,13 @@ public class ChunkMeshGenerator{
     private int[] indicesArray;
     private Vector3f[] verticesArray;
 
+    private volatile Mesh mesh;
+
     public ChunkMeshGenerator(Chunk chunk){
         this.chunk = chunk;
     }
 
-    public synchronized void generateMesh(){
+    public void generateMesh(){
         int cx, cy, cz;
         for(cy=0;cy<Chunk.CHUNK_HEIGHT;++cy){
             for(cx=0;cx<Chunk.CHUNK_SIZE;++cx){
@@ -41,7 +43,10 @@ public class ChunkMeshGenerator{
             indicesArray[x] = indices.get(x);
         }
 
-        System.out.println("v: " + verticesArray.length + ", i:" + indicesArray.length);
+        mesh = new Mesh();
+        mesh.setBuffer(VertexBuffer.Type.Position, 3, BufferUtils.createFloatBuffer(verticesArray));
+        mesh.setBuffer(VertexBuffer.Type.Index, 3, BufferUtils.createIntBuffer(indicesArray));
+        mesh.updateBound();
     }
 
     private void generateBlock(int cx, int cy, int cz){
@@ -111,9 +116,8 @@ public class ChunkMeshGenerator{
         return id;
     }
 
-    public synchronized void applyToMeshObject(Mesh mesh){
-        mesh.setBuffer(VertexBuffer.Type.Position, 3, BufferUtils.createFloatBuffer(verticesArray));
-        mesh.setBuffer(VertexBuffer.Type.Index, 3, BufferUtils.createIntBuffer(indicesArray));
+    public Mesh getMesh(){
+        return mesh;
     }
 
     private void writeObj(){ //this method is used to dump chunk data into an .obj to allow it to be examined in Blender
