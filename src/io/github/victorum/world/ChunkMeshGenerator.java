@@ -55,7 +55,7 @@ public class ChunkMeshGenerator{
             mesh.setBuffer(VertexBuffer.Type.Index, 3, BufferUtils.createIntBuffer(indicesArray));
             mesh.updateBound();
 
-            System.out.println("Finished chunk generation: " + (System.currentTimeMillis() - startAt));
+            System.out.println("Finished chunk generation: " + chunk.getChunkCoordinates() + " in " + (System.currentTimeMillis() - startAt) + "ms");
         }catch(Throwable t){
             t.printStackTrace();
         }
@@ -73,11 +73,11 @@ public class ChunkMeshGenerator{
             Vector3f v7 = new Vector3f(cx + 1, cy + 1, cz + 1);
             Vector3f v8 = new Vector3f(cx, cy + 1, cz + 1);
 
-            if(!isBlockSolid(cx - 1, cy, cz)){
+            if(!isBlockSolid(cx, cy, cz - 1)){
                 addFace(v1, v2, v3, v4, type.getTexture(BlockSide.NEGATIVE_X));
             }
 
-            if(!isBlockSolid(cx + 1, cy, cz)){
+            if(!isBlockSolid(cx, cy, cz + 1)){
                 addFace(v8, v7, v6, v5, type.getTexture(BlockSide.POSITIVE_X));
             }
 
@@ -89,11 +89,11 @@ public class ChunkMeshGenerator{
                 addFace(v4, v3, v7, v8, type.getTexture(BlockSide.POSITIVE_Y));
             }
 
-            if(!isBlockSolid(cx, cy, cz - 1)){
+            if(!isBlockSolid(cx - 1, cy, cz)){
                 addFace(v5, v1, v4, v8, type.getTexture(BlockSide.NEGATIVE_Z));
             }
 
-            if(!isBlockSolid(cx, cy, cz + 1)){
+            if(!isBlockSolid(cx + 1, cy, cz)){
                 addFace(v2, v6, v7, v3, type.getTexture(BlockSide.POSITIVE_Z));
             }
         }
