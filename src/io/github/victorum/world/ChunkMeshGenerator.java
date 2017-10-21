@@ -120,6 +120,10 @@ public class ChunkMeshGenerator{
         return mesh;
     }
 
+    public Chunk getChunk(){
+        return chunk;
+    }
+
     private void writeObj(){ //this method is used to dump chunk data into an .obj to allow it to be examined in Blender
         try(
                 FileOutputStream fileOutputStream = new FileOutputStream(new File(chunk.getChunkCoordinates() + ".obj"));

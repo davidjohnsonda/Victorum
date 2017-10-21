@@ -15,6 +15,7 @@ public class Victorum extends SimpleApplication{
 
     @Override
     public void simpleInitApp(){
+        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         stateManager.attach(worldAppState);
         flyCam.setDragToRotate(true);
         flyCam.setMoveSpeed(128f);

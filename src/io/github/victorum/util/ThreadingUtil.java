@@ -4,7 +4,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public final class ThreadingUtil{
-    public static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(4);
+    public static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     private ThreadingUtil(){}
 }
