@@ -5,10 +5,11 @@ import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
 import com.jme3.scene.Geometry;
-
 import com.jme3.texture.Texture;
+
 import io.github.victorum.util.ThreadingUtil;
 import io.github.victorum.util.VAppState;
+import io.github.victorum.world.generator.WorldGenerator;
 
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -76,11 +77,6 @@ public class WorldAppState extends VAppState{
                     if(scheduledTasks > maximumTasks) break outer;
                 }
             }
-        }
-
-        if(hasBeenNewChunk){
-            //System.gc();
-            hasBeenNewChunk = false;
         }
     }
 

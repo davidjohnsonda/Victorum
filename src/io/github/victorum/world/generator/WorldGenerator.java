@@ -1,18 +1,24 @@
-package io.github.victorum.world;
+package io.github.victorum.world.generator;
 
 import io.github.victorum.block.BlockRegistry;
-
-import java.util.Random;
+import io.github.victorum.world.Chunk;
 
 public class WorldGenerator{
+    private final PerlinNoise perlinNoise;
 
-    protected void generateChunk(Chunk chunk){
-        Random random = new Random(chunk.getChunkCoordinates().hashCode());
+    public WorldGenerator(){
+        perlinNoise = new PerlinNoise(0L);
+    }
+
+    public void generateChunk(Chunk chunk){
         int cx, cy, cz;
+
+        int offsetX = chunk.getChunkCoordinates().getChunkX()*Chunk.CHUNK_SIZE;
+        int offsetZ = chunk.getChunkCoordinates().getChunkZ()*Chunk.CHUNK_SIZE;
 
         for(cx=0;cx<Chunk.CHUNK_SIZE;++cx){
             for(cz=0;cz<Chunk.CHUNK_SIZE;++cz){
-                int height = random.nextInt(Chunk.CHUNK_HEIGHT);
+                int height = (int)Math.round(perlinNoise.noise(offsetX + cx, offsetZ + cz));
                 for(cy=0;cy<height;++cy){
                     chunk.setBlockTypeAt(cx, cy, cz, BlockRegistry.BLOCK_TYPE_GRASS);
                 }
