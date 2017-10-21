@@ -1,11 +1,12 @@
 package io.github.victorum.world;
 
 import com.jme3.app.Application;
+import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
-import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
 
+import com.jme3.texture.Texture;
 import io.github.victorum.util.ThreadingUtil;
 import io.github.victorum.util.VAppState;
 
@@ -25,8 +26,11 @@ public class WorldAppState extends VAppState{
     @Override
     protected void initialize(Application application){
         chunkMaterial = new Material(getVictorum().getAssetManager(), "/Common/MatDefs/Misc/Unshaded.j3md");
-        chunkMaterial.setColor("Color", ColorRGBA.Green);
-        chunkMaterial.setBoolean("VertexColor", false);
+        Texture textureAtlas = getVictorum().getAssetManager().loadTexture(new TextureKey("/atlas.png", false));
+        textureAtlas.setMagFilter(Texture.MagFilter.Nearest);
+        textureAtlas.setMinFilter(Texture.MinFilter.BilinearNearestMipMap);
+        textureAtlas.setAnisotropicFilter(2);
+        chunkMaterial.setTexture("ColorMap", textureAtlas);
         chunkMaterial.getAdditionalRenderState().setFaceCullMode(RenderState.FaceCullMode.Off);
     }
 
@@ -54,8 +58,8 @@ public class WorldAppState extends VAppState{
     protected void doChunkTick(){
         long freeMem = Runtime.getRuntime().freeMemory();
 
-        if(freeMem > 15000000){
-            int ccx, ccz, scheduledTasks = 0, maximumTasks = ((int)freeMem/30000000);
+        if(freeMem > 30000000){
+            int ccx, ccz, scheduledTasks = 0, maximumTasks = ((int)freeMem/50000000);
             outer:for(ccx=0;ccx<World.WORLD_SIZE_IN_CHUNKS;++ccx){
                 for(ccz=0;ccz<World.WORLD_SIZE_IN_CHUNKS;++ccz){
                     Chunk chunk = world.getChunk(ccx, ccz);

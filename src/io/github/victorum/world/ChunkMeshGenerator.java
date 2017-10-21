@@ -1,12 +1,15 @@
 package io.github.victorum.world;
 
+import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Mesh;
 import com.jme3.scene.VertexBuffer;
 import com.jme3.util.BufferUtils;
 
 import io.github.victorum.block.BlockRegistry;
+import io.github.victorum.block.BlockSide;
 import io.github.victorum.block.BlockType;
+import io.github.victorum.block.TextureCoordinates;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,10 +19,8 @@ import java.util.ArrayList;
 public class ChunkMeshGenerator{
     private final Chunk chunk;
     private final ArrayList<Vector3f> vertices = new ArrayList<>();
+    private final ArrayList<Vector2f> texCoords = new ArrayList<>();
     private final ArrayList<Integer> indices = new ArrayList<>();
-
-    private int[] indicesArray;
-    private Vector3f[] verticesArray;
 
     private volatile Mesh mesh;
 
@@ -28,25 +29,36 @@ public class ChunkMeshGenerator{
     }
 
     public void generateMesh(){
-        int cx, cy, cz;
-        for(cy=0;cy<Chunk.CHUNK_HEIGHT;++cy){
-            for(cx=0;cx<Chunk.CHUNK_SIZE;++cx){
-                for(cz=0;cz<Chunk.CHUNK_SIZE;++cz){
-                    generateBlock(cx, cy, cz);
+        try{
+            System.out.println("Starting chunk generation: " + chunk.getChunkCoordinates());
+            long startAt = System.currentTimeMillis();
+
+            int cx, cy, cz;
+            for(cy=0;cy<Chunk.CHUNK_HEIGHT;++cy){
+                for(cx=0;cx<Chunk.CHUNK_SIZE;++cx){
+                    for(cz=0;cz<Chunk.CHUNK_SIZE;++cz){
+                        generateBlock(cx, cy, cz);
+                    }
                 }
             }
-        }
 
-        verticesArray = vertices.toArray(new Vector3f[vertices.size()]);
-        indicesArray = new int[indices.size()];
-        for(int x=0;x<indicesArray.length;++x){
-            indicesArray[x] = indices.get(x);
-        }
+            Vector3f[] verticesArray = vertices.toArray(new Vector3f[vertices.size()]);
+            Vector2f[] texCoordsArray = texCoords.toArray(new Vector2f[texCoords.size()]);
+            int[] indicesArray = new int[indices.size()];
+            for(int x=0;x<indicesArray.length;++x){
+                indicesArray[x] = indices.get(x);
+            }
 
-        mesh = new Mesh();
-        mesh.setBuffer(VertexBuffer.Type.Position, 3, BufferUtils.createFloatBuffer(verticesArray));
-        mesh.setBuffer(VertexBuffer.Type.Index, 3, BufferUtils.createIntBuffer(indicesArray));
-        mesh.updateBound();
+            mesh = new Mesh();
+            mesh.setBuffer(VertexBuffer.Type.Position, 3, BufferUtils.createFloatBuffer(verticesArray));
+            mesh.setBuffer(VertexBuffer.Type.TexCoord, 2, BufferUtils.createFloatBuffer(texCoordsArray));
+            mesh.setBuffer(VertexBuffer.Type.Index, 3, BufferUtils.createIntBuffer(indicesArray));
+            mesh.updateBound();
+
+            System.out.println("Finished chunk generation: " + (System.currentTimeMillis() - startAt));
+        }catch(Throwable t){
+            t.printStackTrace();
+        }
     }
 
     private void generateBlock(int cx, int cy, int cz){
@@ -62,27 +74,27 @@ public class ChunkMeshGenerator{
             Vector3f v8 = new Vector3f(cx, cy + 1, cz + 1);
 
             if(!isBlockSolid(cx - 1, cy, cz)){
-                addFace(v1, v2, v3, v4);
+                addFace(v1, v2, v3, v4, type.getTexture(BlockSide.NEGATIVE_X));
             }
 
             if(!isBlockSolid(cx + 1, cy, cz)){
-                addFace(v8, v7, v6, v5);
+                addFace(v8, v7, v6, v5, type.getTexture(BlockSide.POSITIVE_X));
             }
 
             if(!isBlockSolid(cx, cy - 1, cz)){
-                addFace(v1, v2, v6, v5);
+                addFace(v1, v2, v6, v5, type.getTexture(BlockSide.NEGATIVE_Y));
             }
 
             if(!isBlockSolid(cx, cy + 1, cz)){
-                addFace(v4, v3, v7, v8);
+                addFace(v4, v3, v7, v8, type.getTexture(BlockSide.POSITIVE_Y));
             }
 
             if(!isBlockSolid(cx, cy, cz - 1)){
-                addFace(v5, v1, v4, v8);
+                addFace(v5, v1, v4, v8, type.getTexture(BlockSide.NEGATIVE_Z));
             }
 
             if(!isBlockSolid(cx, cy, cz + 1)){
-                addFace(v2, v6, v7, v3);
+                addFace(v2, v6, v7, v3, type.getTexture(BlockSide.POSITIVE_Z));
             }
         }
     }
@@ -95,11 +107,11 @@ public class ChunkMeshGenerator{
         }
     }
 
-    private void addFace(Vector3f a, Vector3f b, Vector3f c, Vector3f d){
-        int aid = addVertex(a);
-        int bid = addVertex(b);
-        int cid = addVertex(c);
-        int did = addVertex(d);
+    private void addFace(Vector3f a, Vector3f b, Vector3f c, Vector3f d, TextureCoordinates textureCoordinates){
+        int aid = addVertex(a, textureCoordinates.getAtlasStartX(), textureCoordinates.getAtlasEndY());
+        int bid = addVertex(b, textureCoordinates.getAtlasEndX(), textureCoordinates.getAtlasEndY());
+        int cid = addVertex(c, textureCoordinates.getAtlasEndX(), textureCoordinates.getAtlasStartY());
+        int did = addVertex(d, textureCoordinates.getAtlasStartX(), textureCoordinates.getAtlasStartY());
 
         indices.add(aid);
         indices.add(bid);
@@ -110,9 +122,10 @@ public class ChunkMeshGenerator{
         indices.add(aid);
     }
 
-    private int addVertex(Vector3f v){
+    private int addVertex(Vector3f v, float texCoordX, float texCoordY){
         int id = vertices.size();
         vertices.add(v);
+        texCoords.add(new Vector2f(texCoordX, texCoordY));
         return id;
     }
 
