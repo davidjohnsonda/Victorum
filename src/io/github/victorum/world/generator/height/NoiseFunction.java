@@ -1,4 +1,4 @@
-package io.github.victorum.world.generator;
+package io.github.victorum.world.generator.height;
 
 import io.github.victorum.util.MathUtil;
 

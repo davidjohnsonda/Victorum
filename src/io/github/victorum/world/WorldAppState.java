@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class WorldAppState extends VAppState{
-    private static final long CHUNK_TICK_INTERVAL_MS = 256;
+    private static final long CHUNK_TICK_INTERVAL_MS = 25;
     private final World world = new World();
     private final WorldGenerator worldGenerator = new WorldGenerator();
     private final HashMap<ChunkCoordinates, Geometry> chunkMeshes = new HashMap<>();
@@ -60,9 +60,20 @@ public class WorldAppState extends VAppState{
         long freeMem = Runtime.getRuntime().freeMemory();
 
         if(freeMem > 30000000){
+            int camPosX = (int)getVictorum().getCamera().getLocation().getX();
+            int camPosZ = (int)getVictorum().getCamera().getLocation().getZ();
+
+            int camPosChunkX = camPosX/Chunk.CHUNK_SIZE;
+            int camPosChunkZ = camPosZ/Chunk.CHUNK_SIZE;
+
+            int viewRegionStartX = camPosChunkX-8;
+            int viewRegionEndX = camPosChunkX+8;
+            int viewRegionStartZ = camPosChunkZ-8;
+            int viewRegionEndZ = camPosChunkZ+8;
+            
             int ccx, ccz, scheduledTasks = 0, maximumTasks = ((int)freeMem/50000000);
-            outer:for(ccx=0;ccx<World.WORLD_SIZE_IN_CHUNKS;++ccx){
-                for(ccz=0;ccz<World.WORLD_SIZE_IN_CHUNKS;++ccz){
+            outer:for(ccx=viewRegionStartX;ccx<viewRegionEndX;++ccx){
+                for(ccz=viewRegionStartZ;ccz<viewRegionEndZ;++ccz){
                     Chunk chunk = world.getChunk(ccx, ccz);
                     switch(chunk.getStatus()){
                         case POST_INIT:
@@ -77,6 +88,22 @@ public class WorldAppState extends VAppState{
                     if(scheduledTasks > maximumTasks) break outer;
                 }
             }
+
+            /*Iterator<Map.Entry<ChunkCoordinates, Chunk>> it = world.getChunkData().entrySet().iterator();
+            while(it.hasNext()){
+                Map.Entry<ChunkCoordinates, Chunk> entry = it.next();
+                if(
+                        entry.getKey().getChunkX() < viewRegionStartX ||
+                        entry.getKey().getChunkX() >= viewRegionEndX ||
+                        entry.getKey().getChunkX() < viewRegionStartZ ||
+                        entry.getKey().getChunkX() >= viewRegionEndZ
+                ){
+                    Geometry geometry = chunkMeshes.get(entry.getKey());
+                    getVictorum().getRootNode().detachChild(geometry);
+                    chunkMeshes.remove(entry.getKey());
+                    world.getChunkData().remove(entry.getKey());
+                }
+            }*/
         }
     }
 

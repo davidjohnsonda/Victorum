@@ -14,4 +14,8 @@ public class World{
         return chunkData.computeIfAbsent(coordinates, Chunk::new);
     }
 
+    public ConcurrentHashMap<ChunkCoordinates, Chunk> getChunkData(){
+        return chunkData;
+    }
+
 }
