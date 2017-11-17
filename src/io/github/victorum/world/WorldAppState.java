@@ -126,8 +126,6 @@ public class WorldAppState extends VAppState{
         }else{
             geometry.setMesh(generator.getMesh());
         }
-
-        hasBeenNewChunk = true;
     }
 
 }
