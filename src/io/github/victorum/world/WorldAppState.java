@@ -22,7 +22,6 @@ public class WorldAppState extends VAppState{
     private final ConcurrentLinkedDeque<ChunkMeshGenerator> pendingMeshes = new ConcurrentLinkedDeque<>();
     private Material chunkMaterial;
     private long nextChunkTick = 0;
-    private boolean hasBeenNewChunk = false;
 
     @Override
     protected void initialize(Application application){
@@ -57,53 +56,33 @@ public class WorldAppState extends VAppState{
     @Override protected void onDisable(){}
 
     protected void doChunkTick(){
-        long freeMem = Runtime.getRuntime().freeMemory();
+        int camPosX = (int)getVictorum().getCamera().getLocation().getX();
+        int camPosZ = (int)getVictorum().getCamera().getLocation().getZ();
 
-        if(freeMem > 30000000){
-            int camPosX = (int)getVictorum().getCamera().getLocation().getX();
-            int camPosZ = (int)getVictorum().getCamera().getLocation().getZ();
+        int camPosChunkX = camPosX/Chunk.CHUNK_SIZE;
+        int camPosChunkZ = camPosZ/Chunk.CHUNK_SIZE;
 
-            int camPosChunkX = camPosX/Chunk.CHUNK_SIZE;
-            int camPosChunkZ = camPosZ/Chunk.CHUNK_SIZE;
+        int viewRegionStartX = camPosChunkX-8;
+        int viewRegionEndX = camPosChunkX+8;
+        int viewRegionStartZ = camPosChunkZ-8;
+        int viewRegionEndZ = camPosChunkZ+8;
 
-            int viewRegionStartX = camPosChunkX-8;
-            int viewRegionEndX = camPosChunkX+8;
-            int viewRegionStartZ = camPosChunkZ-8;
-            int viewRegionEndZ = camPosChunkZ+8;
-            
-            int ccx, ccz, scheduledTasks = 0, maximumTasks = ((int)freeMem/50000000);
-            outer:for(ccx=viewRegionStartX;ccx<viewRegionEndX;++ccx){
-                for(ccz=viewRegionStartZ;ccz<viewRegionEndZ;++ccz){
-                    Chunk chunk = world.getChunk(ccx, ccz);
-                    switch(chunk.getStatus()){
-                        case POST_INIT:
-                            requestChunkData(chunk);
-                            ++scheduledTasks;
-                            break;
-                        case HOLDING_DATA:
-                            requestMeshRefresh(chunk);
-                            ++scheduledTasks;
-                            break;
-                    }
-                    if(scheduledTasks > maximumTasks) break outer;
+        int ccx, ccz, scheduledTasks = 0, maximumTasks = 3;
+        outer:for(ccx=viewRegionStartX;ccx<viewRegionEndX;++ccx){
+            for(ccz=viewRegionStartZ;ccz<viewRegionEndZ;++ccz){
+                Chunk chunk = world.getChunk(ccx, ccz);
+                switch(chunk.getStatus()){
+                    case POST_INIT:
+                        requestChunkData(chunk);
+                        ++scheduledTasks;
+                        break;
+                    case HOLDING_DATA:
+                        requestMeshRefresh(chunk);
+                        ++scheduledTasks;
+                        break;
                 }
+                if(scheduledTasks > maximumTasks) break outer;
             }
-
-            /*Iterator<Map.Entry<ChunkCoordinates, Chunk>> it = world.getChunkData().entrySet().iterator();
-            while(it.hasNext()){
-                Map.Entry<ChunkCoordinates, Chunk> entry = it.next();
-                if(
-                        entry.getKey().getChunkX() < viewRegionStartX ||
-                        entry.getKey().getChunkX() >= viewRegionEndX ||
-                        entry.getKey().getChunkX() < viewRegionStartZ ||
-                        entry.getKey().getChunkX() >= viewRegionEndZ
-                ){
-                    Geometry geometry = chunkMeshes.get(entry.getKey());
-                    getVictorum().getRootNode().detachChild(geometry);
-                    chunkMeshes.remove(entry.getKey());
-                    world.getChunkData().remove(entry.getKey());
-                }
-            }*/
         }
     }
 
