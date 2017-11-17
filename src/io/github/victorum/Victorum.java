@@ -1,8 +1,8 @@
 package io.github.victorum;
 
 import com.jme3.app.SimpleApplication;
-
 import com.jme3.math.ColorRGBA;
+
 import io.github.victorum.world.WorldAppState;
 
 public class Victorum extends SimpleApplication{
@@ -23,9 +23,14 @@ public class Victorum extends SimpleApplication{
     }
 
     @Override
+    public void simpleUpdate(float tpf){
+        System.out.println(getCamera().getLocation());
+    }
+
+    @Override
     public void stop(){
         super.stop();
-        System.exit(0); //neccessary because of background threads in io.github.victorum.util.ThreadingUtil
+        System.exit(0); //necessary because of background threads in io.github.victorum.util.ThreadingUtil
     }
 
     public WorldAppState getWorldAppState(){

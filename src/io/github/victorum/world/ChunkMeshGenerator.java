@@ -78,7 +78,7 @@ public class ChunkMeshGenerator{
             }
 
             if(!isBlockSolid(cx, cy, cz + 1)){
-                addFace(v8, v7, v6, v5, type.getTexture(BlockSide.POSITIVE_X));
+                addFace(v6, v5, v8, v7, type.getTexture(BlockSide.POSITIVE_X));
             }
 
             if(!isBlockSolid(cx, cy - 1, cz)){
