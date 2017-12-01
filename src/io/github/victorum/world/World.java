@@ -10,7 +10,11 @@ public class World{
     }
 
     public Chunk getChunk(ChunkCoordinates coordinates){
-        return chunkData.computeIfAbsent(coordinates, Chunk::new);
+        return chunkData.computeIfAbsent(coordinates, this::createChunk);
+    }
+
+    private Chunk createChunk(ChunkCoordinates coordinates){
+        return new Chunk(coordinates, this);
     }
 
     public ConcurrentHashMap<ChunkCoordinates, Chunk> getChunkData(){

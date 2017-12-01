@@ -5,5 +5,6 @@ public enum ChunkStatus{
     AWAITING_DATA,
     HOLDING_DATA,
     AWAITING_MESH_REFRESH,
-    IDLE;
+    IDLE,
+    UNLOADED;
 }

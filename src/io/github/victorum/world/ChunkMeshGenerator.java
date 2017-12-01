@@ -101,7 +101,7 @@ public class ChunkMeshGenerator{
 
     private boolean isBlockSolid(int x, int y, int z){
         if(x < 0 || x >= Chunk.CHUNK_SIZE || z < 0 || z >= Chunk.CHUNK_SIZE || y < 0 || y >= Chunk.CHUNK_HEIGHT){
-            return false;
+            return true;
         }else{
             return chunk.getBlockTypeAt(x, y, z).getBlockId() != BlockRegistry.BLOCK_TYPE_AIR.getBlockId();
         }

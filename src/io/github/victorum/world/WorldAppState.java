@@ -12,10 +12,12 @@ import io.github.victorum.util.VAppState;
 import io.github.victorum.world.generator.WorldGenerator;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class WorldAppState extends VAppState{
     private static final long CHUNK_TICK_INTERVAL_MS = 25;
+    private static final int VIEW_DISTANCE = 16;
     private final World world = new World();
     private final WorldGenerator worldGenerator = new WorldGenerator();
     private final HashMap<ChunkCoordinates, Geometry> chunkMeshes = new HashMap<>();
@@ -62,10 +64,10 @@ public class WorldAppState extends VAppState{
         int camPosChunkX = camPosX/Chunk.CHUNK_SIZE;
         int camPosChunkZ = camPosZ/Chunk.CHUNK_SIZE;
 
-        int viewRegionStartX = camPosChunkX-8;
-        int viewRegionEndX = camPosChunkX+8;
-        int viewRegionStartZ = camPosChunkZ-8;
-        int viewRegionEndZ = camPosChunkZ+8;
+        int viewRegionStartX = camPosChunkX-VIEW_DISTANCE;
+        int viewRegionEndX = camPosChunkX+VIEW_DISTANCE;
+        int viewRegionStartZ = camPosChunkZ-VIEW_DISTANCE;
+        int viewRegionEndZ = camPosChunkZ+VIEW_DISTANCE;
 
         int ccx, ccz, scheduledTasks = 0, maximumTasks = 3;
         outer:for(ccx=viewRegionStartX;ccx<viewRegionEndX;++ccx){
@@ -77,11 +79,25 @@ public class WorldAppState extends VAppState{
                         ++scheduledTasks;
                         break;
                     case HOLDING_DATA:
-                        requestMeshRefresh(chunk);
-                        ++scheduledTasks;
+                        scheduledTasks += requestMeshRefresh(chunk);
                         break;
                 }
                 if(scheduledTasks > maximumTasks) break outer;
+            }
+        }
+
+        for(Map.Entry<ChunkCoordinates, Chunk> entry : world.getChunkData().entrySet()){
+            if(
+                entry.getKey().getChunkX() < viewRegionStartX ||
+                entry.getKey().getChunkX() >= viewRegionEndX ||
+                entry.getKey().getChunkZ() < viewRegionStartZ ||
+                entry.getKey().getChunkZ() >= viewRegionEndZ
+            ){
+                entry.getValue().setStatus(ChunkStatus.UNLOADED); //first to start other things being able to drop this chunk's processing
+                Geometry geometry = chunkMeshes.get(entry.getKey());
+                if(geometry != null) getVictorum().getRootNode().detachChild(geometry);
+                chunkMeshes.remove(entry.getKey());
+                world.getChunkData().remove(entry.getKey());
             }
         }
     }
@@ -91,24 +107,47 @@ public class WorldAppState extends VAppState{
         ThreadingUtil.EXECUTOR_SERVICE.submit(() -> loadChunkData(chunk));
     }
 
-    private void requestMeshRefresh(Chunk chunk){
-        chunk.setStatus(ChunkStatus.AWAITING_MESH_REFRESH);
-        ThreadingUtil.EXECUTOR_SERVICE.submit(() -> refreshChunkMesh(chunk));
+    private int requestMeshRefresh(Chunk chunk){
+        int chunkX = chunk.getChunkCoordinates().getChunkX();
+        int chunkZ = chunk.getChunkCoordinates().getChunkZ();
+
+        if(
+            isChunkReadyForMesh(chunkX+1, chunkZ) &&
+            isChunkReadyForMesh(chunkX-1, chunkZ) &&
+            isChunkReadyForMesh(chunkX, chunkZ+1) &&
+            isChunkReadyForMesh(chunkX, chunkZ-1)
+        ){
+            chunk.setStatus(ChunkStatus.AWAITING_MESH_REFRESH);
+            ThreadingUtil.EXECUTOR_SERVICE.submit(() -> refreshChunkMesh(chunk));
+            return 1;
+        }
+
+        return 0;
+    }
+
+    private boolean isChunkReadyForMesh(int chunkX, int chunkZ){
+        Chunk chunk = world.getChunk(chunkX, chunkZ);
+        return chunk != null && chunk.isReadyForMesh();
     }
 
     private void loadChunkData(Chunk chunk){
+        if(chunk.getStatus() == ChunkStatus.UNLOADED) return;
         worldGenerator.generateChunk(chunk);
         chunk.setStatus(ChunkStatus.HOLDING_DATA);
     }
 
     private void refreshChunkMesh(Chunk chunk){
+        if(chunk.getStatus() == ChunkStatus.UNLOADED) return;
         ChunkMeshGenerator chunkMeshGenerator = new ChunkMeshGenerator(chunk);
         chunkMeshGenerator.generateMesh();
+        if(chunk.getStatus() == ChunkStatus.UNLOADED) return;
         pendingMeshes.add(chunkMeshGenerator);
         chunk.setStatus(ChunkStatus.IDLE);
     }
 
     private void updateMeshInScenegraph(ChunkMeshGenerator generator){
+        if(generator.getChunk().getStatus() == ChunkStatus.UNLOADED) return;
+
         Chunk chunk = generator.getChunk();
         Geometry geometry = chunkMeshes.get(chunk.getChunkCoordinates());
 

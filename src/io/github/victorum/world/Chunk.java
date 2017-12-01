@@ -9,11 +9,13 @@ public class Chunk{
     public static int CHUNK_SIZE = 16;
     public static int CHUNK_HEIGHT = 256;
     private final ChunkCoordinates chunkCoordinates;
+    private final World world;
     private final AtomicIntegerArray blockTypeData = new AtomicIntegerArray(CHUNK_SIZE*CHUNK_SIZE*CHUNK_HEIGHT);
     private volatile ChunkStatus status = ChunkStatus.POST_INIT;
 
-    protected Chunk(ChunkCoordinates chunkCoordinates){
+    protected Chunk(ChunkCoordinates chunkCoordinates, World world){
         this.chunkCoordinates = chunkCoordinates;
+        this.world = world;
     }
 
     public ChunkCoordinates getChunkCoordinates(){
@@ -38,6 +40,14 @@ public class Chunk{
 
     public void setStatus(ChunkStatus status){
         this.status = status;
+    }
+
+    public boolean isReadyForMesh(){
+        return status != ChunkStatus.POST_INIT && status != ChunkStatus.AWAITING_DATA;
+    }
+
+    public World getWorld(){
+        return world;
     }
 
 }
