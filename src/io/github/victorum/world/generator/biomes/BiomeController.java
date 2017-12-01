@@ -9,7 +9,7 @@ import java.util.Random;
 public class BiomeController implements OctaveAmplitudeController{
     private final Biome biomePlains = new Biome(new OctaveAmplitudeController.AmplitudePair(.5, .52));
     private final Biome biomeMountains = new Biome(new OctaveAmplitudeController.AmplitudePair(.2, .95));
-    private final Biome biomeLowlands = new Biome(new OctaveAmplitudeController.AmplitudePair(.2, .4));
+    private final Biome biomeOcean = new Biome(new OctaveAmplitudeController.AmplitudePair(.2, .4));
     private final Octave humidityOctave;
     private final Octave temperatureOctave;
     private final Octave heightVariationOctave;
@@ -28,7 +28,7 @@ public class BiomeController implements OctaveAmplitudeController{
             return biomeMountains;
         }else{
             if(humidity < .5){
-                return biomeLowlands;
+                return biomeOcean;
             }else{
                 return biomePlains;
             }
