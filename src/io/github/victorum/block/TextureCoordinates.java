@@ -2,7 +2,7 @@ package io.github.victorum.block;
 
 public final class TextureCoordinates{
     private static final float TEXTURE_ATLAS_SIZE_IN_TEXTURES_X = 3;
-    private static final float TEXTURE_ATLAS_SIZE_IN_TEXTURES_Y = 3;
+    private static final float TEXTURE_ATLAS_SIZE_IN_TEXTURES_Y = 4;
     private final int texX, texY;
 
     public TextureCoordinates(int texX, int texY){
