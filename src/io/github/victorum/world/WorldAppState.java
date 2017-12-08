@@ -18,16 +18,15 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 public class WorldAppState extends VAppState{
     private static final long CHUNK_TICK_INTERVAL_MS = 25;
     private static final int VIEW_DISTANCE = 16;
-    public World world = null;
-    public final WorldGenerator worldGenerator = new WorldGenerator();
-    public final HashMap<ChunkCoordinates, Geometry> chunkMeshes = new HashMap<>();
-    public final ConcurrentLinkedDeque<ChunkMeshGenerator> pendingMeshes = new ConcurrentLinkedDeque<>();
+    private final World world = new World();
+    private final WorldGenerator worldGenerator = new WorldGenerator();
+    private final HashMap<ChunkCoordinates, Geometry> chunkMeshes = new HashMap<>();
+    private final ConcurrentLinkedDeque<ChunkMeshGenerator> pendingMeshes = new ConcurrentLinkedDeque<>();
     private Material chunkMaterial;
     private long nextChunkTick = 0;
 
     @Override
     protected void initialize(Application application){
-        world = new World(application);
         chunkMaterial = new Material(getVictorum().getAssetManager(), "/Common/MatDefs/Misc/Unshaded.j3md");
         Texture textureAtlas = getVictorum().getAssetManager().loadTexture(new TextureKey("/atlas.png", false));
         textureAtlas.setMagFilter(Texture.MagFilter.Nearest);
@@ -137,7 +136,8 @@ public class WorldAppState extends VAppState{
         chunk.setStatus(ChunkStatus.HOLDING_DATA);
     }
 
-    public void refreshChunkMesh(Chunk chunk){
+    private void refreshChunkMesh(Chunk chunk){
+        if(chunk.getStatus() == ChunkStatus.UNLOADED) return;
         ChunkMeshGenerator chunkMeshGenerator = new ChunkMeshGenerator(chunk);
         chunkMeshGenerator.generateMesh();
         if(chunk.getStatus() == ChunkStatus.UNLOADED) return;
@@ -145,7 +145,9 @@ public class WorldAppState extends VAppState{
         chunk.setStatus(ChunkStatus.IDLE);
     }
 
-    public void updateMeshInScenegraph(ChunkMeshGenerator generator){
+    private void updateMeshInScenegraph(ChunkMeshGenerator generator){
+        if(generator.getChunk().getStatus() == ChunkStatus.UNLOADED) return;
+
         Chunk chunk = generator.getChunk();
         Geometry geometry = chunkMeshes.get(chunk.getChunkCoordinates());
 
