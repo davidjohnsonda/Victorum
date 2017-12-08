@@ -167,4 +167,8 @@ public class WorldAppState extends VAppState{
         }
     }
 
+    public World getWorld(){
+        return world;
+    }
+
 }
