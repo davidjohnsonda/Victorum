@@ -1,5 +1,10 @@
 package io.github.victorum.util;
 
+import com.jme3.math.Triangle;
+import com.jme3.math.Vector3f;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.Mesh;
+
 import java.util.Random;
 
 public final class MathUtil{
@@ -31,5 +36,4 @@ public final class MathUtil{
         double f = (1 - Math.cos(ft))*.5;
         return a*(1-f)+b*f;
     }
-
 }
