@@ -9,7 +9,7 @@ import com.jme3.math.Vector3f;
 import io.github.victorum.block.BlockRegistry;
 import io.github.victorum.util.VAppState;
 
-public class Player extends VAppState implements ActionListener{
+public class PlayerAppState extends VAppState implements ActionListener{
     private static final float GRAVITY = -9.81f;
     private static final float JUMP_VELOCITY = -3*GRAVITY;
     private Vector3f position;
@@ -27,7 +27,7 @@ public class Player extends VAppState implements ActionListener{
 
     @Override
     protected void initialize(Application application) {
-        position = new Vector3f(32, 1024, 32);
+        position = new Vector3f(0, 1024, 0);
         worldVelocity = new Vector3f(0, 0, 0);
         playerVelocity = new Vector3f(0, 0, 0);
         worldAcceleration = new Vector3f(0, GRAVITY, 0);
@@ -57,7 +57,7 @@ public class Player extends VAppState implements ActionListener{
                 right = keyPressed;
                 break;
             case "Jump":
-                jumpTimeRemaining = 0.5f;
+                jumpTimeRemaining = 0.16f;
                 break;
         }
     }
@@ -88,6 +88,7 @@ public class Player extends VAppState implements ActionListener{
         if(applyVelocitySeparately(playerVelocity, tpf)) isJumping = false;
 
         getApplication().getCamera().setLocation(position.add(0, 1.7f, 0));
+        System.out.println(position);
     }
 
     private boolean applyVelocitySeparately(Vector3f velocity, float tpf){

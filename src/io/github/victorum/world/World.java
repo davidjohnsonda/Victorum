@@ -23,31 +23,35 @@ public class World{
     public BlockType getBlockTypeAt(int globalX, int globalY, int globalZ){
         if(globalY < 0 || globalY >= Chunk.CHUNK_HEIGHT){
             return BlockRegistry.BLOCK_TYPE_AIR;
-        }else {
-            Chunk chunk = getChunk(translateGlobalToChunkCoordinate(globalX), translateGlobalToChunkCoordinate(globalZ));
+        }else{
+            BlockCoordinates blockCoordinates = new BlockCoordinates(globalX, globalZ);
+            Chunk chunk = getChunk(blockCoordinates.getChunkX(), blockCoordinates.getChunkZ());
+            return chunk.getBlockTypeAt(blockCoordinates.getLocalX(), globalY, blockCoordinates.getLocalZ());
+
+            /*Chunk chunk = getChunk(translateGlobalToChunkCoordinate(globalX), translateGlobalToChunkCoordinate(globalZ));
 
             if(chunk.getStatus() == ChunkStatus.POST_INIT || chunk.getStatus() == ChunkStatus.UNLOADED || chunk.getStatus() == ChunkStatus.AWAITING_DATA){
                 return BlockRegistry.BLOCK_TYPE_STONE;
             }
 
             return chunk.getBlockTypeAt(
-                    globalX - chunk.getChunkCoordinates().getChunkX() * Chunk.CHUNK_SIZE,
+                    globalX - chunk.getChunkCoordinates().getChunkX() * Chunk.CHUNK_SIZE - (globalX < 0 ? 1 : 0),
                     globalY,
-                    globalZ - chunk.getChunkCoordinates().getChunkZ() * Chunk.CHUNK_SIZE
-            );
+                    globalZ - chunk.getChunkCoordinates().getChunkZ() * Chunk.CHUNK_SIZE - (globalZ < 0 ? 1 : 0)
+            );*/
         }
     }
 
     private int translateGlobalToChunkCoordinate(int c){
         if(c < 0){
-            return c/Chunk.CHUNK_SIZE-1;
+            return -((-c)/Chunk.CHUNK_SIZE+1);
         }else{
             return c/Chunk.CHUNK_SIZE;
         }
     }
 
     public BlockType getBlockTypeAt(float globalX, float globalY, float globalZ){
-        return getBlockTypeAt((int) globalX, (int) globalY, (int) globalZ);
+        return getBlockTypeAt((int)Math.floor(globalX), (int)Math.floor(globalY), (int)Math.floor(globalZ));
     }
 
     public ConcurrentHashMap<ChunkCoordinates, Chunk> getChunkData(){

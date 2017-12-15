@@ -69,21 +69,26 @@ public class WorldAppState extends VAppState{
         int viewRegionStartZ = camPosChunkZ-VIEW_DISTANCE;
         int viewRegionEndZ = camPosChunkZ+VIEW_DISTANCE;
 
-        int ccx, ccz, scheduledTasks = 0, maximumTasks = 3;
-        outer:for(ccx=viewRegionStartX;ccx<viewRegionEndX;++ccx){
-            for(ccz=viewRegionStartZ;ccz<viewRegionEndZ;++ccz){
-                Chunk chunk = world.getChunk(ccx, ccz);
-                switch(chunk.getStatus()){
-                    case POST_INIT:
-                        requestChunkData(chunk);
-                        ++scheduledTasks;
-                        break;
-                    case HOLDING_DATA:
-                        scheduledTasks += requestMeshRefresh(chunk);
-                        break;
-                }
-                if(scheduledTasks > maximumTasks) break outer;
+        int scheduledTasks = 0;
+
+        doChunkTick(camPosChunkX, camPosChunkZ);
+        outer:for(int r=1;r<VIEW_DISTANCE;++r){
+            int startX = camPosChunkX-r;
+            int endX = camPosChunkX+r;
+            int startZ = camPosChunkZ-r;
+            int endZ = camPosChunkZ+r;
+
+            for(int ccx=startX;ccx<=endX;++ccx){
+                scheduledTasks += doChunkTick(ccx, startZ);
+                scheduledTasks += doChunkTick(ccx, endZ);
             }
+
+            for(int ccz=startZ+1;ccz<endZ;++ccz){
+                scheduledTasks += doChunkTick(startX, ccz);
+                scheduledTasks += doChunkTick(endX, ccz);
+            }
+
+            if(scheduledTasks > 4) break outer;
         }
 
         for(Map.Entry<ChunkCoordinates, Chunk> entry : world.getChunkData().entrySet()){
@@ -100,6 +105,18 @@ public class WorldAppState extends VAppState{
                 world.getChunkData().remove(entry.getKey());
             }
         }
+    }
+
+    private int doChunkTick(int ccx, int ccz){
+        Chunk chunk = world.getChunk(ccx, ccz);
+        switch(chunk.getStatus()){
+            case POST_INIT:
+                requestChunkData(chunk);
+                return 1;
+            case HOLDING_DATA:
+                return requestMeshRefresh(chunk);
+        }
+        return 0;
     }
 
     private void requestChunkData(Chunk chunk){
