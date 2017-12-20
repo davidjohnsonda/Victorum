@@ -8,6 +8,7 @@ Key to the textures (Coords listed as x,y)
 (1,3) Log block side
 (1,4) Water block side
 (1,5) Red phosphorus block side
+(1,6) Oil Shale block side
 (2,1) Grass block side
 (2,2) Granite block side
 (2,3) Log block top
@@ -17,6 +18,7 @@ Key to the textures (Coords listed as x,y)
 (3,2) Stone block side
 (3,3) Leaf block side
 (3,4) Basalt block side
+(3,5) Limonite block side
 */
 
 public final class TextureCoordinates{
