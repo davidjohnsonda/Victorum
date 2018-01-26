@@ -12,11 +12,18 @@ import java.util.Random;
 public class Tree{
     private int baseX, baseZ, height, radius;
 
-    public Tree(ChunkCoordinates base, Random random){
-        baseX = base.getChunkX()*Chunk.CHUNK_SIZE+random.nextInt(Chunk.CHUNK_SIZE);
-        baseZ = base.getChunkZ()*Chunk.CHUNK_SIZE+random.nextInt(Chunk.CHUNK_SIZE);
-        radius = random.nextInt(2)+3;
-        height = random.nextInt(3)+radius+1;
+    protected static Tree tryTreeCreation(ChunkCoordinates base, Random random, WorldGenerator generator){
+        Tree tree = new Tree();
+        tree.baseX = base.getChunkX()*Chunk.CHUNK_SIZE+random.nextInt(Chunk.CHUNK_SIZE);
+        tree.baseZ = base.getChunkZ()*Chunk.CHUNK_SIZE+random.nextInt(Chunk.CHUNK_SIZE);
+
+        if(generator.heightAt(tree.baseX, tree.baseZ) < WorldGenerator.SEA_LEVEL){
+            return null;
+        }
+
+        tree.radius = random.nextInt(2)+3;
+        tree.height = random.nextInt(3)+tree.radius+1;
+        return tree;
     }
 
     protected void generateForChunk(Chunk chunk, WorldGenerator worldGenerator){

@@ -11,7 +11,7 @@ import java.util.zip.CRC32;
 public class ChunkDecorationGenerator{
     private final ArrayList<Tree> treeArrayList = new ArrayList<>();
 
-    public ChunkDecorationGenerator(ChunkCoordinates coordinates, long seed){
+    public ChunkDecorationGenerator(ChunkCoordinates coordinates, WorldGenerator worldGenerator, long seed){
         CRC32 crc32 = new CRC32();
         crc32.update(coordinates.getChunkX());
         crc32.update(coordinates.getChunkZ());
@@ -20,7 +20,10 @@ public class ChunkDecorationGenerator{
         int treeCount = random.nextInt(4);
 
         for(int i=0;i<treeCount;++i){
-            treeArrayList.add(new Tree(coordinates, random));
+            Tree tree = Tree.tryTreeCreation(coordinates, random, worldGenerator);
+            if(tree != null){
+                treeArrayList.add(tree);
+            }
         }
     }
 

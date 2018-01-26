@@ -11,6 +11,7 @@ import io.github.victorum.world.generator.height.Octave;
 import java.util.Random;
 
 public class WorldGenerator{
+    public static final int SEA_LEVEL = 100;
     private final BiomeController biomeController;
     private final NoiseFunction dirtFunction;
     private Octave terrainOctaves[];
@@ -49,21 +50,21 @@ public class WorldGenerator{
                 }
                 chunk.setBlockTypeAt(cx, maximumHeight, cz, topCovering);
                 for(cy=maximumHeight+1;cy<Chunk.CHUNK_HEIGHT;++cy){
-                    chunk.setBlockTypeAt(cx, cy, cz, cy < 100 ? BlockRegistry.BLOCK_TYPE_WATER : BlockRegistry.BLOCK_TYPE_AIR);
+                    chunk.setBlockTypeAt(cx, cy, cz, cy < SEA_LEVEL ? BlockRegistry.BLOCK_TYPE_WATER : BlockRegistry.BLOCK_TYPE_AIR);
                 }
             }
         }
 
         long seed = 6563;
-        new ChunkDecorationGenerator(chunk.getChunkCoordinates(), seed).generateForChunk(chunk, this);
-        new ChunkDecorationGenerator(chunk.getChunkCoordinates().add(-1, -1), seed).generateForChunk(chunk, this);
-        new ChunkDecorationGenerator(chunk.getChunkCoordinates().add(0, -1), seed).generateForChunk(chunk, this);
-        new ChunkDecorationGenerator(chunk.getChunkCoordinates().add(1, -1), seed).generateForChunk(chunk, this);
-        new ChunkDecorationGenerator(chunk.getChunkCoordinates().add(-1, 0), seed).generateForChunk(chunk, this);
-        new ChunkDecorationGenerator(chunk.getChunkCoordinates().add(1, 0), seed).generateForChunk(chunk, this);
-        new ChunkDecorationGenerator(chunk.getChunkCoordinates().add(-1, 1), seed).generateForChunk(chunk, this);
-        new ChunkDecorationGenerator(chunk.getChunkCoordinates().add(0, 1), seed).generateForChunk(chunk, this);
-        new ChunkDecorationGenerator(chunk.getChunkCoordinates().add(1, 1), seed).generateForChunk(chunk, this);
+        new ChunkDecorationGenerator(chunk.getChunkCoordinates(), this, seed).generateForChunk(chunk, this);
+        new ChunkDecorationGenerator(chunk.getChunkCoordinates().add(-1, -1), this,  seed).generateForChunk(chunk, this);
+        new ChunkDecorationGenerator(chunk.getChunkCoordinates().add(0, -1), this,  seed).generateForChunk(chunk, this);
+        new ChunkDecorationGenerator(chunk.getChunkCoordinates().add(1, -1), this,  seed).generateForChunk(chunk, this);
+        new ChunkDecorationGenerator(chunk.getChunkCoordinates().add(-1, 0), this,  seed).generateForChunk(chunk, this);
+        new ChunkDecorationGenerator(chunk.getChunkCoordinates().add(1, 0), this,  seed).generateForChunk(chunk, this);
+        new ChunkDecorationGenerator(chunk.getChunkCoordinates().add(-1, 1), this, seed).generateForChunk(chunk, this);
+        new ChunkDecorationGenerator(chunk.getChunkCoordinates().add(0, 1), this, seed).generateForChunk(chunk, this);
+        new ChunkDecorationGenerator(chunk.getChunkCoordinates().add(1, 1), this, seed).generateForChunk(chunk, this);
     }
 
     public int heightAt(int x, int z){
