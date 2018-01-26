@@ -16,6 +16,10 @@ public final class ChunkCoordinates{
         return chunkZ;
     }
 
+    public ChunkCoordinates add(int x, int z){
+        return new ChunkCoordinates(chunkX+x, chunkZ+z);
+    }
+
     @Override
     public int hashCode(){
         return chunkX | (chunkZ << 16);

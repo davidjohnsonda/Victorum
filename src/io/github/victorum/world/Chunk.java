@@ -50,4 +50,9 @@ public class Chunk{
         return world;
     }
 
+    public boolean contains(int globalX, int globalZ){
+        BlockCoordinates coordinates = new BlockCoordinates(globalX, globalZ);
+        return coordinates.getChunkX() == coordinates.getChunkX() && coordinates.getChunkZ() == coordinates.getChunkZ();
+    }
+
 }

@@ -4,6 +4,7 @@ import io.github.victorum.block.BlockRegistry;
 import io.github.victorum.block.BlockType;
 import io.github.victorum.world.Chunk;
 import io.github.victorum.world.generator.biomes.BiomeController;
+import io.github.victorum.world.generator.decoration.ChunkDecorationGenerator;
 import io.github.victorum.world.generator.height.NoiseFunction;
 import io.github.victorum.world.generator.height.Octave;
 
@@ -52,9 +53,20 @@ public class WorldGenerator{
                 }
             }
         }
+
+        long seed = 6563;
+        new ChunkDecorationGenerator(chunk.getChunkCoordinates(), seed).generateForChunk(chunk, this);
+        new ChunkDecorationGenerator(chunk.getChunkCoordinates().add(-1, -1), seed).generateForChunk(chunk, this);
+        new ChunkDecorationGenerator(chunk.getChunkCoordinates().add(0, -1), seed).generateForChunk(chunk, this);
+        new ChunkDecorationGenerator(chunk.getChunkCoordinates().add(1, -1), seed).generateForChunk(chunk, this);
+        new ChunkDecorationGenerator(chunk.getChunkCoordinates().add(-1, 0), seed).generateForChunk(chunk, this);
+        new ChunkDecorationGenerator(chunk.getChunkCoordinates().add(1, 0), seed).generateForChunk(chunk, this);
+        new ChunkDecorationGenerator(chunk.getChunkCoordinates().add(-1, 1), seed).generateForChunk(chunk, this);
+        new ChunkDecorationGenerator(chunk.getChunkCoordinates().add(0, 1), seed).generateForChunk(chunk, this);
+        new ChunkDecorationGenerator(chunk.getChunkCoordinates().add(1, 1), seed).generateForChunk(chunk, this);
     }
 
-    private int heightAt(int x, int z){
+    public int heightAt(int x, int z){
         double total = 0;
         for(Octave terrainOctave : terrainOctaves){
             total += terrainOctave.noiseAt(x, z);

@@ -32,4 +32,12 @@ public final class MathUtil{
         return a*(1-f)+b*f;
     }
 
+    public static int distanceSquared(int x1, int y1, int z1, int x2, int y2, int z2){
+        return square(x1-x2) + square(y1-y2) + square(z1-z2);
+    }
+
+    public static int square(int i){
+        return i*i;
+    }
+
 }
