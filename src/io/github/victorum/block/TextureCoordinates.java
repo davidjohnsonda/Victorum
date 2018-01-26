@@ -23,7 +23,7 @@ Key to the textures (Coords listed as x,y)
 
 public final class TextureCoordinates{
     private static final float TEXTURE_ATLAS_SIZE_IN_TEXTURES_X = 3;
-    private static final float TEXTURE_ATLAS_SIZE_IN_TEXTURES_Y = 5;
+    private static final float TEXTURE_ATLAS_SIZE_IN_TEXTURES_Y = 6;
     private final int texX, texY;
 
     public TextureCoordinates(int texX, int texY){
