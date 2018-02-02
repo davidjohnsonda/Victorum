@@ -10,6 +10,7 @@ import io.github.victorum.block.BlockRegistry;
 import io.github.victorum.block.BlockSide;
 import io.github.victorum.block.BlockType;
 import io.github.victorum.block.TextureCoordinates;
+import io.github.victorum.util.MeshGenerator;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,10 +19,7 @@ import java.util.ArrayList;
 
 public class ChunkMeshGenerator{
     private final Chunk chunk;
-    private final ArrayList<Vector3f> vertices = new ArrayList<>();
-    private final ArrayList<Vector2f> texCoords = new ArrayList<>();
-    private final ArrayList<Integer> indices = new ArrayList<>();
-
+    private final MeshGenerator mainMeshGenerator = new MeshGenerator();
     private volatile Mesh mesh;
 
     public ChunkMeshGenerator(Chunk chunk){
@@ -42,18 +40,7 @@ public class ChunkMeshGenerator{
                 }
             }
 
-            Vector3f[] verticesArray = vertices.toArray(new Vector3f[vertices.size()]);
-            Vector2f[] texCoordsArray = texCoords.toArray(new Vector2f[texCoords.size()]);
-            int[] indicesArray = new int[indices.size()];
-            for(int x=0;x<indicesArray.length;++x){
-                indicesArray[x] = indices.get(x);
-            }
-
-            mesh = new Mesh();
-            mesh.setBuffer(VertexBuffer.Type.Position, 3, BufferUtils.createFloatBuffer(verticesArray));
-            mesh.setBuffer(VertexBuffer.Type.TexCoord, 2, BufferUtils.createFloatBuffer(texCoordsArray));
-            mesh.setBuffer(VertexBuffer.Type.Index, 3, BufferUtils.createIntBuffer(indicesArray));
-            mesh.updateBound();
+            mesh = mainMeshGenerator.toMesh();
 
             System.out.println("Finished chunk generation: " + chunk.getChunkCoordinates() + " in " + (System.currentTimeMillis() - startAt) + "ms");
         }catch(Throwable t){
@@ -123,25 +110,18 @@ public class ChunkMeshGenerator{
     }
 
     private void addFace(Vector3f a, Vector3f b, Vector3f c, Vector3f d, TextureCoordinates textureCoordinates){
-        int aid = addVertex(a, textureCoordinates.getAtlasStartX(), textureCoordinates.getAtlasEndY());
-        int bid = addVertex(b, textureCoordinates.getAtlasEndX(), textureCoordinates.getAtlasEndY());
-        int cid = addVertex(c, textureCoordinates.getAtlasEndX(), textureCoordinates.getAtlasStartY());
-        int did = addVertex(d, textureCoordinates.getAtlasStartX(), textureCoordinates.getAtlasStartY());
+        int aid = mainMeshGenerator.addVertex(a, textureCoordinates.getAtlasStartX(), textureCoordinates.getAtlasEndY());
+        int bid = mainMeshGenerator.addVertex(b, textureCoordinates.getAtlasEndX(), textureCoordinates.getAtlasEndY());
+        int cid = mainMeshGenerator.addVertex(c, textureCoordinates.getAtlasEndX(), textureCoordinates.getAtlasStartY());
+        int did = mainMeshGenerator.addVertex(d, textureCoordinates.getAtlasStartX(), textureCoordinates.getAtlasStartY());
 
-        indices.add(aid);
-        indices.add(bid);
-        indices.add(cid);
+        mainMeshGenerator.getIndices().add(aid);
+        mainMeshGenerator.getIndices().add(bid);
+        mainMeshGenerator.getIndices().add(cid);
 
-        indices.add(cid);
-        indices.add(did);
-        indices.add(aid);
-    }
-
-    private int addVertex(Vector3f v, float texCoordX, float texCoordY){
-        int id = vertices.size();
-        vertices.add(v);
-        texCoords.add(new Vector2f(texCoordX, texCoordY));
-        return id;
+        mainMeshGenerator.getIndices().add(cid);
+        mainMeshGenerator.getIndices().add(did);
+        mainMeshGenerator.getIndices().add(aid);
     }
 
     public Mesh getMesh(){
@@ -150,24 +130,6 @@ public class ChunkMeshGenerator{
 
     public Chunk getChunk(){
         return chunk;
-    }
-
-    private void writeObj(){ //this method is used to dump chunk data into an .obj to allow it to be examined in Blender
-        try(
-                FileOutputStream fileOutputStream = new FileOutputStream(new File(chunk.getChunkCoordinates() + ".obj"));
-        ){
-            for(Vector3f vertex : vertices){
-                fileOutputStream.write(("v " + vertex.x + " " + vertex.y + " " + vertex.z + "\n").getBytes());
-            }
-
-            for(int ii=0;ii<indices.size();ii+=3){
-                fileOutputStream.write(("f " + (indices.get(ii)+1) + " " + (indices.get(ii+1)+1) + " " + (indices.get(ii+2)+1) + "\n").getBytes());
-            }
-
-            fileOutputStream.flush();
-        }catch(IOException ex){
-            ex.printStackTrace();
-        }
     }
 
 }
