@@ -122,7 +122,7 @@ public class PlayerAppState extends VAppState implements ActionListener{
 
         for(int stepIndex=0;stepIndex<stepCount;++stepIndex){
             position.addLocal(moveAmount);
-            if(getVictorum().getWorldAppState().getWorld().getBlockTypeAt(position.getX(), position.getY(), position.getZ()) != BlockRegistry.BLOCK_TYPE_AIR){
+            if(getVictorum().getWorldAppState().getWorld().getBlockTypeAt(position.getX(), position.getY(), position.getZ()).isSolid()){
                 position.subtractLocal(moveAmount);
                 return true;
             }

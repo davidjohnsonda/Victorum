@@ -73,43 +73,53 @@ public class ChunkMeshGenerator{
             Vector3f v7 = new Vector3f(cx + 1, cy + 1, cz + 1);
             Vector3f v8 = new Vector3f(cx, cy + 1, cz + 1);
 
-            if(!isBlockSolid(cx, cy, cz - 1)){
+            if(shouldRenderFace(type, cx, cy, cz - 1)){
                 addFace(v1, v2, v3, v4, type.getTexture(BlockSide.NEGATIVE_X));
             }
 
-            if(!isBlockSolid(cx, cy, cz + 1)){
+            if(shouldRenderFace(type, cx, cy, cz + 1)){
                 addFace(v6, v5, v8, v7, type.getTexture(BlockSide.POSITIVE_X));
             }
 
-            if(!isBlockSolid(cx, cy - 1, cz)){
+            if(shouldRenderFace(type, cx, cy - 1, cz)){
                 addFace(v1, v2, v6, v5, type.getTexture(BlockSide.NEGATIVE_Y));
             }
 
-            if(!isBlockSolid(cx, cy + 1, cz)){
+            if(shouldRenderFace(type, cx, cy + 1, cz)){
                 addFace(v4, v3, v7, v8, type.getTexture(BlockSide.POSITIVE_Y));
             }
 
-            if(!isBlockSolid(cx - 1, cy, cz)){
+            if(shouldRenderFace(type, cx - 1, cy, cz)){
                 addFace(v5, v1, v4, v8, type.getTexture(BlockSide.NEGATIVE_Z));
             }
 
-            if(!isBlockSolid(cx + 1, cy, cz)){
+            if(shouldRenderFace(type, cx + 1, cy, cz)){
                 addFace(v2, v6, v7, v3, type.getTexture(BlockSide.POSITIVE_Z));
             }
         }
     }
 
-    private boolean isBlockSolid(int x, int y, int z){
+    private boolean shouldRenderFace(BlockType currentType, int x, int y, int z){
+        BlockType otherType;
         if(x < 0 || x >= Chunk.CHUNK_SIZE || z < 0 || z >= Chunk.CHUNK_SIZE || y < 0 || y >= Chunk.CHUNK_HEIGHT){
             BlockCoordinates blockCoordinates = new BlockCoordinates(chunk.getChunkCoordinates().getChunkX(), chunk.getChunkCoordinates().getChunkZ(), x, z);
-            return chunk.getWorld().getBlockTypeAt(
-                    blockCoordinates.getGlobalX(),
-                    y,
-                    blockCoordinates.getGlobalZ()
-                ).getBlockId() != BlockRegistry.BLOCK_TYPE_AIR.getBlockId();
+            otherType =  chunk.getWorld().getBlockTypeAt(
+                blockCoordinates.getGlobalX(),
+                y,
+                blockCoordinates.getGlobalZ()
+            );
         }else{
-            return chunk.getBlockTypeAt(x, y, z).getBlockId() != BlockRegistry.BLOCK_TYPE_AIR.getBlockId();
+            otherType = chunk.getBlockTypeAt(x, y, z);
         }
+
+
+        return (
+                otherType.getBlockId() != currentType.getBlockId() &&
+                    (
+                        otherType.getBlockId() == BlockRegistry.BLOCK_TYPE_AIR.getBlockId() || 
+                        otherType.getBlockId() == BlockRegistry.BLOCK_TYPE_WATER.getBlockId()
+                    )
+                );
     }
 
     private void addFace(Vector3f a, Vector3f b, Vector3f c, Vector3f d, TextureCoordinates textureCoordinates){

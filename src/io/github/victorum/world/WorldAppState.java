@@ -4,6 +4,7 @@ import com.jme3.app.Application;
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.texture.Texture;
 
@@ -33,6 +34,7 @@ public class WorldAppState extends VAppState{
         textureAtlas.setMinFilter(Texture.MinFilter.BilinearNearestMipMap);
         textureAtlas.setAnisotropicFilter(2);
         chunkMaterial.setTexture("ColorMap", textureAtlas);
+        chunkMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
         chunkMaterial.getAdditionalRenderState().setFaceCullMode(RenderState.FaceCullMode.Off);
     }
 
@@ -171,6 +173,7 @@ public class WorldAppState extends VAppState{
         if(geometry == null){
             geometry = new Geometry("Chunk", generator.getMesh());
             geometry.setMaterial(chunkMaterial);
+            geometry.setQueueBucket(RenderQueue.Bucket.Translucent);
             geometry.setLocalTranslation(
                 chunk.getChunkCoordinates().getChunkX()*Chunk.CHUNK_SIZE,
                 0,
