@@ -88,7 +88,6 @@ public class PlayerAppState extends VAppState implements ActionListener{
         if(applyVelocitySeparately(playerVelocity, tpf)) isJumping = false;
 
         getApplication().getCamera().setLocation(position.add(0, 1.7f, 0));
-        System.out.println(position);
     }
 
     private boolean applyVelocitySeparately(Vector3f velocity, float tpf){

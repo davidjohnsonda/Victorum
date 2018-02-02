@@ -3,28 +3,22 @@ package io.github.victorum.world.generator;
 import io.github.victorum.block.BlockRegistry;
 import io.github.victorum.block.BlockType;
 import io.github.victorum.world.Chunk;
-import io.github.victorum.world.generator.biomes.BiomeController;
 import io.github.victorum.world.generator.decoration.ChunkDecorationGenerator;
 import io.github.victorum.world.generator.height.NoiseFunction;
-import io.github.victorum.world.generator.height.Octave;
+import io.github.victorum.world.generator.height.PerlinNoise;
 
 import java.util.Random;
 
 public class WorldGenerator{
     public static final int SEA_LEVEL = 100;
-    private final BiomeController biomeController;
+    public static final int SAND_LEVEL = SEA_LEVEL+3;
     private final NoiseFunction dirtFunction;
-    private Octave terrainOctaves[];
+    private final PerlinNoise perlinNoise;
 
     public WorldGenerator(){
         Random random = new Random(0L);
-        biomeController = new BiomeController(random);
         dirtFunction = new NoiseFunction(random);
-
-        terrainOctaves = new Octave[8];
-        for(int i=0;i<terrainOctaves.length;++i){
-            terrainOctaves[i] = new Octave(random, biomeController, (int)Math.pow(2, i), Math.pow(2, i));
-        }
+        perlinNoise = new PerlinNoise(random);
     }
 
     public void generateChunk(Chunk chunk){
@@ -39,8 +33,8 @@ public class WorldGenerator{
                 int coveringStartHeight = maximumHeight - (int)Math.round(dirtFunction.scaledNoise(cx, cz)*5);
                 if(coveringStartHeight < 0) coveringStartHeight = 0;
 
-                BlockType covering = maximumHeight < 110 ? BlockRegistry.BLOCK_TYPE_SAND : BlockRegistry.BLOCK_TYPE_DIRT;
-                BlockType topCovering = maximumHeight < 110 ? BlockRegistry.BLOCK_TYPE_SAND : BlockRegistry.BLOCK_TYPE_GRASS;
+                BlockType covering = maximumHeight < SAND_LEVEL ? BlockRegistry.BLOCK_TYPE_SAND : BlockRegistry.BLOCK_TYPE_DIRT;
+                BlockType topCovering = maximumHeight < SAND_LEVEL ? BlockRegistry.BLOCK_TYPE_SAND : BlockRegistry.BLOCK_TYPE_GRASS;
 
                 for(cy=0;cy<coveringStartHeight;++cy){
                     chunk.setBlockTypeAt(cx, cy, cz, BlockRegistry.BLOCK_TYPE_STONE);
@@ -68,11 +62,11 @@ public class WorldGenerator{
     }
 
     public int heightAt(int x, int z){
-        double total = 0;
-        for(Octave terrainOctave : terrainOctaves){
-            total += terrainOctave.noiseAt(x, z);
-        }
-        return (int)Math.round(total);
+        double fractionalHeight = perlinNoise.noiseAt(x, z);
+
+        fractionalHeight = Math.pow(fractionalHeight, 2);
+
+        return (int)Math.round(fractionalHeight*Chunk.CHUNK_HEIGHT);
     }
 
 }

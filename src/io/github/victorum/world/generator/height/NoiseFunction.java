@@ -5,8 +5,8 @@ import io.github.victorum.util.MathUtil;
 import java.util.Random;
 
 public class NoiseFunction{
-    private int a, b, c, o;
-    private double d;
+    private final int a, b, c, o;
+    private final double d;
 
     public NoiseFunction(Random random){
         a = MathUtil.randomPrimeInRange(random, 10000, 99999);
