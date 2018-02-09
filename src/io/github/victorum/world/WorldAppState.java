@@ -6,6 +6,7 @@ import com.jme3.material.Material;
 import com.jme3.material.RenderState;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 import com.jme3.texture.Texture;
 
 import io.github.victorum.util.ThreadingUtil;
@@ -21,7 +22,7 @@ public class WorldAppState extends VAppState{
     private static final int VIEW_DISTANCE = 16;
     private final World world = new World();
     private final WorldGenerator worldGenerator = new WorldGenerator();
-    private final HashMap<ChunkCoordinates, Geometry> chunkMeshes = new HashMap<>();
+    private final HashMap<ChunkCoordinates, Node> chunkMeshes = new HashMap<>();
     private final ConcurrentLinkedDeque<ChunkMeshGenerator> pendingMeshes = new ConcurrentLinkedDeque<>();
     private Material chunkMaterial;
     private long nextChunkTick = 0;
@@ -101,8 +102,8 @@ public class WorldAppState extends VAppState{
                 entry.getKey().getChunkZ() >= viewRegionEndZ
             ){
                 entry.getValue().setStatus(ChunkStatus.UNLOADED); //first to start other things being able to drop this chunk's processing
-                Geometry geometry = chunkMeshes.get(entry.getKey());
-                if(geometry != null) getVictorum().getRootNode().detachChild(geometry);
+                Node node = chunkMeshes.get(entry.getKey());
+                if(node != null) getVictorum().getRootNode().detachChild(node);
                 chunkMeshes.remove(entry.getKey());
                 world.getChunkData().remove(entry.getKey());
             }
@@ -168,22 +169,34 @@ public class WorldAppState extends VAppState{
         if(generator.getChunk().getStatus() == ChunkStatus.UNLOADED) return;
 
         Chunk chunk = generator.getChunk();
-        Geometry geometry = chunkMeshes.get(chunk.getChunkCoordinates());
+        Node node = chunkMeshes.get(chunk.getChunkCoordinates());
 
-        if(geometry == null){
-            geometry = new Geometry("Chunk", generator.getMesh());
-            geometry.setMaterial(chunkMaterial);
-            geometry.setQueueBucket(RenderQueue.Bucket.Translucent);
-            geometry.setLocalTranslation(
-                chunk.getChunkCoordinates().getChunkX()*Chunk.CHUNK_SIZE,
-                0,
-                chunk.getChunkCoordinates().getChunkZ()*Chunk.CHUNK_SIZE
+        if(node == null){
+            node = new Node();
+
+            Geometry mainGeometry = new Geometry("Main", generator.getMesh());
+            mainGeometry.setMaterial(chunkMaterial);
+            node.attachChild(mainGeometry);
+
+            Geometry waterGeometry = new Geometry("Water", generator.getWaterMesh());
+            waterGeometry.setMaterial(chunkMaterial);
+            waterGeometry.setQueueBucket(RenderQueue.Bucket.Translucent);
+            node.attachChild(waterGeometry);
+
+            node.setLocalTranslation(
+                    chunk.getChunkCoordinates().getChunkX()*Chunk.CHUNK_SIZE,
+                    0,
+                    chunk.getChunkCoordinates().getChunkZ()*Chunk.CHUNK_SIZE
             );
-            getVictorum().getRootNode().attachChild(geometry);
 
-            chunkMeshes.put(chunk.getChunkCoordinates(), geometry);
+            getVictorum().getRootNode().attachChild(node);
+
+            chunkMeshes.put(chunk.getChunkCoordinates(), node);
         }else{
-            geometry.setMesh(generator.getMesh());
+            Geometry mainGeometry = (Geometry)node.getChild("Main");
+            Geometry waterGeometry = (Geometry)node.getChild("Water");
+            mainGeometry.setMesh(generator.getMesh());
+            waterGeometry.setMesh(generator.getWaterMesh());
         }
     }
 
