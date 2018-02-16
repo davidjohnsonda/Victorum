@@ -4,7 +4,7 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
 public class PerlinNoise{
-    private static final int OCTAVE_COUNT = 8;
+    private static final int OCTAVE_COUNT = 10;
     private static final double MAXIMUM_AMPLITUDE;
     private final AtomicReferenceArray<Octave> octaveArrayList = new AtomicReferenceArray<>(OCTAVE_COUNT);
 

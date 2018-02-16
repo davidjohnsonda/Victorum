@@ -27,18 +27,6 @@ public class World{
             BlockCoordinates blockCoordinates = new BlockCoordinates(globalX, globalZ);
             Chunk chunk = getChunk(blockCoordinates.getChunkX(), blockCoordinates.getChunkZ());
             return chunk.getBlockTypeAt(blockCoordinates.getLocalX(), globalY, blockCoordinates.getLocalZ());
-
-            /*Chunk chunk = getChunk(translateGlobalToChunkCoordinate(globalX), translateGlobalToChunkCoordinate(globalZ));
-
-            if(chunk.getStatus() == ChunkStatus.POST_INIT || chunk.getStatus() == ChunkStatus.UNLOADED || chunk.getStatus() == ChunkStatus.AWAITING_DATA){
-                return BlockRegistry.BLOCK_TYPE_STONE;
-            }
-
-            return chunk.getBlockTypeAt(
-                    globalX - chunk.getChunkCoordinates().getChunkX() * Chunk.CHUNK_SIZE - (globalX < 0 ? 1 : 0),
-                    globalY,
-                    globalZ - chunk.getChunkCoordinates().getChunkZ() * Chunk.CHUNK_SIZE - (globalZ < 0 ? 1 : 0)
-            );*/
         }
     }
 
