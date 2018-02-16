@@ -46,39 +46,39 @@ public abstract class Entity{
         if(isOnGround){
             velocity.set(netDirection.mult(10f));
             if(velocity.length() != 0){
-                isOnGround = applyVelocitySeparately(netDirection, tpf);
+                isOnGround = applyVelocitySeparately(netDirection, tpf).isHitY();
             }
         }else{
             airAcceleration.set(netDirection);
             airAcceleration.addLocal(0, -9.8f, 0);
             velocity.addLocal(airAcceleration.multLocal(tpf));
-            isOnGround = applyVelocitySeparately(velocity, tpf);
+            isOnGround = applyVelocitySeparately(velocity, tpf).isHitY();
         }
     }
 
-    private boolean applyVelocitySeparately(Vector3f velocity, float tpf){
+    private HitData applyVelocitySeparately(Vector3f velocity, float tpf){
+        HitData hitData = new HitData(false, false, false);
         float x = velocity.getX();
         float y = velocity.getY();
         float z = velocity.getZ();
-        boolean hit = false;
 
         velocity.set(0, 0, 0);
 
         velocity.setX(x);
-        if(applyVelocity(velocity, tpf)) hit = true;
+        if(applyVelocity(velocity, tpf)) hitData.hitX = true;
         velocity.setX(0);
 
         velocity.setY(y);
-        if(applyVelocity(velocity, tpf)) hit = true;
+        if(applyVelocity(velocity, tpf)) hitData.hitY = true;
         velocity.setY(0);
 
         velocity.setZ(z);
-        if(applyVelocity(velocity, tpf)) hit = true;
+        if(applyVelocity(velocity, tpf)) hitData.hitZ = true;
         velocity.setZ(0);
 
         velocity.set(x, y, z);
 
-        return hit;
+        return hitData;
     }
 
     private boolean applyVelocity(Vector3f velocity, float tpf){
@@ -106,7 +106,7 @@ public abstract class Entity{
 
     public void jump(){
         isOnGround = false;
-        velocity.addLocal(0, 6.260990337f, 0);
+        velocity.addLocal(0, 3f, 0);
     }
 
     public abstract void update(float tpf);
@@ -162,4 +162,29 @@ public abstract class Entity{
     public final Spatial getSpatial(){
         return spatial;
     }
+
+    private static final class HitData{
+        protected boolean hitX;
+        protected boolean hitY;
+        protected boolean hitZ;
+
+        public HitData(boolean hitX, boolean hitY, boolean hitZ){
+            this.hitX = hitX;
+            this.hitY = hitY;
+            this.hitZ = hitZ;
+        }
+
+        public boolean isHitX() {
+            return hitX;
+        }
+
+        public boolean isHitY() {
+            return hitY;
+        }
+
+        public boolean isHitZ() {
+            return hitZ;
+        }
+    }
+
 }

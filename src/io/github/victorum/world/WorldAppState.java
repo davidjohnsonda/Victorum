@@ -181,6 +181,7 @@ public class WorldAppState extends VAppState{
             Geometry waterGeometry = new Geometry("Water", generator.getWaterMesh());
             waterGeometry.setMaterial(chunkMaterial);
             waterGeometry.setQueueBucket(RenderQueue.Bucket.Translucent);
+            waterGeometry.setLocalTranslation(0, -0.1f, 0);
             node.attachChild(waterGeometry);
 
             node.setLocalTranslation(
