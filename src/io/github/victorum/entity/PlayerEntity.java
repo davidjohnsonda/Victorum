@@ -15,8 +15,6 @@ public class PlayerEntity extends Entity implements ActionListener{
         super(victorum.getWorldAppState().getWorld(), new Node());
         this.victorum = victorum;
 
-        getSpatial().setLocalTranslation(0, 1024, 0);
-
         victorum.getInputManager().addMapping("forward", new KeyTrigger(KeyInput.KEY_W));
         victorum.getInputManager().addMapping("backward", new KeyTrigger(KeyInput.KEY_S));
         victorum.getInputManager().addMapping("left", new KeyTrigger(KeyInput.KEY_A));

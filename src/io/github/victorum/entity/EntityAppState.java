@@ -2,6 +2,7 @@ package io.github.victorum.entity;
 
 import com.jme3.app.Application;
 
+import com.jme3.math.Vector3f;
 import io.github.victorum.util.VAppState;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ public class EntityAppState extends VAppState{
 
     @Override
     protected void initialize(Application application) {
-        addEntity(new PlayerEntity(getVictorum()));
+        addEntity(new PlayerEntity(getVictorum()), new Vector3f(0, 256, 0));
     }
 
     @Override
@@ -38,7 +39,8 @@ public class EntityAppState extends VAppState{
 
     }
 
-    public void addEntity(Entity entity){
+    public void addEntity(Entity entity, Vector3f location){
+        entity.getSpatial().setLocalTranslation(location);
         getVictorum().getRootNode().attachChild(entity.getSpatial());
         entityArrayList.add(entity);
     }

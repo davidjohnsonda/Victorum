@@ -2,10 +2,9 @@ package io.github.victorum;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.math.ColorRGBA;
-
 import com.jme3.math.Vector3f;
+
 import io.github.victorum.entity.EntityAppState;
-import io.github.victorum.entity.player.PlayerAppState;
 import io.github.victorum.world.WorldAppState;
 
 public class Victorum extends SimpleApplication{
@@ -41,6 +40,10 @@ public class Victorum extends SimpleApplication{
 
     public WorldAppState getWorldAppState(){
         return worldAppState;
+    }
+
+    public EntityAppState getEntityAppState(){
+        return entityAppState;
     }
 
 }

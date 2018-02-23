@@ -99,8 +99,6 @@ public abstract class Entity{
 
         spatial.setLocalTranslation(location);
 
-        System.out.println(velocity + " " + tpf + " " + isCollided);
-
         return isCollided;
     }
 
@@ -161,6 +159,10 @@ public abstract class Entity{
 
     public final Spatial getSpatial(){
         return spatial;
+    }
+
+    public World getWorld(){
+        return world;
     }
 
     private static final class HitData{
