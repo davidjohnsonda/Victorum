@@ -30,6 +30,13 @@ public class World{
         }
     }
 
+    public void setBlockTypeAt(int globalX, int globalY, int globalZ, BlockType type){
+        BlockCoordinates blockCoordinates = new BlockCoordinates(globalX, globalZ);
+        Chunk chunk = getChunk(blockCoordinates.getChunkX(), blockCoordinates.getChunkZ());
+        chunk.setBlockTypeAt(blockCoordinates.getLocalX(), globalY, blockCoordinates.getLocalZ(), type);
+        chunk.setStatus(ChunkStatus.HOLDING_DATA);
+    }
+
     private int translateGlobalToChunkCoordinate(int c){
         if(c < 0){
             return -((-c)/Chunk.CHUNK_SIZE+1);
