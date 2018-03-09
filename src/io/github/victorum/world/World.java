@@ -20,6 +20,10 @@ public class World{
         return new Chunk(coordinates, this);
     }
 
+    public Chunk getChunkIfExists(ChunkCoordinates coordinates){
+        return chunkData.get(coordinates);
+    }
+
     public BlockType getBlockTypeAt(int globalX, int globalY, int globalZ){
         if(globalY < 0 || globalY >= Chunk.CHUNK_HEIGHT){
             return BlockRegistry.BLOCK_TYPE_AIR;
@@ -35,14 +39,6 @@ public class World{
         Chunk chunk = getChunk(blockCoordinates.getChunkX(), blockCoordinates.getChunkZ());
         chunk.setBlockTypeAt(blockCoordinates.getLocalX(), globalY, blockCoordinates.getLocalZ(), type);
         chunk.setStatus(ChunkStatus.HOLDING_DATA);
-    }
-
-    private int translateGlobalToChunkCoordinate(int c){
-        if(c < 0){
-            return -((-c)/Chunk.CHUNK_SIZE+1);
-        }else{
-            return c/Chunk.CHUNK_SIZE;
-        }
     }
 
     public BlockType getBlockTypeAt(float globalX, float globalY, float globalZ){

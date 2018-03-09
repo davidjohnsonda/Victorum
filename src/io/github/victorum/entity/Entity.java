@@ -3,9 +3,12 @@ package io.github.victorum.entity;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 
+import io.github.victorum.world.BlockCoordinates;
+import io.github.victorum.world.ChunkCoordinates;
 import io.github.victorum.world.World;
 
 public abstract class Entity{
+    private boolean isRemoved = false;
     private World world;
     private Spatial spatial;
     private Vector3f[] collisionVectors;
@@ -55,6 +58,14 @@ public abstract class Entity{
             airAcceleration.addLocal(0, -9.8f, 0);
             velocity.addLocal(airAcceleration.multLocal(tpf));
             isOnGround = applyVelocitySeparately(velocity, tpf).isHitY();
+        }
+
+        Vector3f location = spatial.getLocalTranslation();
+        BlockCoordinates coordinates = new BlockCoordinates(location.getX(), location.getZ());
+        ChunkCoordinates chunkCoordinates = new ChunkCoordinates(coordinates.getChunkX(), coordinates.getChunkZ());
+        if(world.getChunkIfExists(chunkCoordinates) == null){
+            remove();
+            System.out.println("Removing entity");
         }
     }
 
@@ -169,6 +180,14 @@ public abstract class Entity{
 
     public World getWorld(){
         return world;
+    }
+
+    protected void remove(){
+        isRemoved = true;
+    }
+
+    protected boolean isRemoved(){
+        return isRemoved;
     }
 
     private static final class HitData{

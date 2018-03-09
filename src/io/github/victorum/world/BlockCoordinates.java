@@ -14,6 +14,10 @@ public final class BlockCoordinates{
         this.localZ = globalZ - chunkZ*Chunk.CHUNK_SIZE;
     }
 
+    public BlockCoordinates(float globalX, float globalZ){
+        this((int)globalX, (int)globalZ);
+    }
+
     public BlockCoordinates(int chunkX, int chunkZ, int localX, int localZ){
         this.chunkX = chunkX;
         this.chunkZ = chunkZ;

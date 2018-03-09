@@ -1,11 +1,12 @@
 package io.github.victorum.entity;
 
 import com.jme3.app.Application;
-
 import com.jme3.math.Vector3f;
+
 import io.github.victorum.util.VAppState;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class EntityAppState extends VAppState{
     private ArrayList<Entity> entityArrayList = new ArrayList<>();
@@ -23,9 +24,16 @@ public class EntityAppState extends VAppState{
     @Override
     public void update(float tpf){
         super.update(tpf);
-        for(Entity entity : entityArrayList){
+        Iterator<Entity> entityIterator = entityArrayList.iterator();
+        while(entityIterator.hasNext()){
+            Entity entity = entityIterator.next();
             entity.update(tpf);
             entity.updatePhysics(tpf);
+            if(entity.isRemoved()){
+                getVictorum().getRootNode().detachChild(entity.getSpatial());
+                entityIterator.remove();
+                System.out.println("Actually removing entity");
+            }
         }
     }
 
