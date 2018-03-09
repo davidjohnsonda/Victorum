@@ -1,12 +1,15 @@
 package io.github.victorum.world;
 
 import com.jme3.app.Application;
+import com.jme3.font.BitmapFont;
+import com.jme3.font.BitmapText;
 import com.jme3.input.InputManager;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.math.Vector3f;
 
+import com.jme3.system.AppSettings;
 import io.github.victorum.block.BlockRegistry;
 import io.github.victorum.util.VAppState;
 
@@ -18,16 +21,22 @@ public class WorldModificationAppState extends VAppState implements ActionListen
 
     @Override
     protected void initialize(Application application) {
-        /*blockCursor = new Geometry("Cursor", new Box(0.6f, 0.6f, 0.6f));
-        Material material = new Material(getVictorum().getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-        material.setColor("Color", ColorRGBA.White);
-        blockCursor.setMaterial(material);
-        getVictorum().getRootNode().attachChild(blockCursor);*/
-
         InputManager inputManager = getVictorum().getInputManager();
         inputManager.addMapping("blockplace", new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
         inputManager.addMapping("blockbreak", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addListener(this, "blockplace", "blockbreak");
+
+        initCrossHair();
+    }
+
+    private void initCrossHair(){
+        BitmapFont font = getVictorum().getAssetManager().loadFont("Interface/Fonts/Default.fnt");
+        BitmapText crosshair = new BitmapText(font, false);
+        crosshair.setSize(font.getCharSet().getRenderedSize()*2);
+        crosshair.setText("+");
+        AppSettings settings = getVictorum().getSettings();
+        crosshair.setLocalTranslation(settings.getWidth()/2-crosshair.getLineWidth()/2, settings.getHeight()/2+crosshair.getLineHeight()/2, 0);
+        getVictorum().getGuiNode().attachChild(crosshair);
     }
 
     private void updateBlockData(){
@@ -56,14 +65,16 @@ public class WorldModificationAppState extends VAppState implements ActionListen
 
     @Override
     public void onAction(String label, boolean value, float f) {
-        updateBlockData();
-        switch(label){
-            case "blockbreak":
-                getVictorum().getWorldAppState().getWorld().setBlockTypeAt(blockX, blockY, blockZ, BlockRegistry.BLOCK_TYPE_AIR);
-                break;
-            case "blockplace":
-                getVictorum().getWorldAppState().getWorld().setBlockTypeAt(placeBlockX, placeBlockY, placeBlockZ, BlockRegistry.BLOCK_TYPE_STONE);
-                break;
+        if(value) {
+            updateBlockData();
+            switch (label) {
+                case "blockbreak":
+                    getVictorum().getWorldAppState().getWorld().setBlockTypeAt(blockX, blockY, blockZ, BlockRegistry.BLOCK_TYPE_AIR);
+                    break;
+                case "blockplace":
+                    getVictorum().getWorldAppState().getWorld().setBlockTypeAt(placeBlockX, placeBlockY, placeBlockZ, BlockRegistry.BLOCK_TYPE_STONE);
+                    break;
+            }
         }
     }
 
