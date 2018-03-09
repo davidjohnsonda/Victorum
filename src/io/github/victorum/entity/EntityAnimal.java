@@ -12,7 +12,7 @@ public class EntityAnimal extends Entity{
     private float countdown = -1, jumpCountdown = 0;
 
     public EntityAnimal(World world, Spatial spatial){
-        super(world, spatial);
+        super(world, spatial, new Vector3f(0, 0, 0));
     }
 
     @Override

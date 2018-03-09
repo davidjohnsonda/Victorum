@@ -8,14 +8,16 @@ import io.github.victorum.world.World;
 public abstract class Entity{
     private World world;
     private Spatial spatial;
+    private Vector3f[] collisionVectors;
     private Vector3f forwardDirection = new Vector3f();
     private Vector3f leftDirection = new Vector3f();
     private boolean forward, backwards, left, right, isOnGround;
     private Vector3f velocity, airAcceleration;
 
-    public Entity(World world, Spatial spatial){
+    public Entity(World world, Spatial spatial, Vector3f... collisionVectors){
         this.world = world;
         this.spatial = spatial;
+        this.collisionVectors = collisionVectors;
         velocity = new Vector3f();
         airAcceleration = new Vector3f();
         forward = backwards = left = right = isOnGround = false;
@@ -90,10 +92,14 @@ public abstract class Entity{
 
         for(int i=0;i<stepCount;++i){
             location.addLocal(step);
-            if(world.getBlockTypeAt(location.getX(), location.getY(), location.getZ()).isSolid()){
-                location.subtractLocal(step);
-                isCollided = true;
-                break;
+
+            for(Vector3f collisionVector : collisionVectors){
+                Vector3f locationPrime = location.add(collisionVector);
+                if(world.getBlockTypeAt(locationPrime.getX(), locationPrime.getY(), locationPrime.getZ()).isSolid()){
+                    location.subtractLocal(step);
+                    isCollided = true;
+                    break;
+                }
             }
         }
 

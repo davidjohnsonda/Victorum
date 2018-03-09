@@ -3,6 +3,7 @@ package io.github.victorum.entity;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
+import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 
@@ -12,7 +13,18 @@ public class PlayerEntity extends Entity implements ActionListener{
     private final Victorum victorum;
 
     public PlayerEntity(Victorum victorum){
-        super(victorum.getWorldAppState().getWorld(), new Node());
+        super(victorum.getWorldAppState().getWorld(), new Node(),
+                new Vector3f(.25f, 0, 0),
+                new Vector3f(-.25f, 0, 0),
+                new Vector3f(0, 0, .25f),
+                new Vector3f(0, 0, -.25f),
+                new Vector3f(0, 0, 0),
+                new Vector3f(.25f, 1.7f, 0),
+                new Vector3f(-.25f, 1.7f, 0),
+                new Vector3f(0, 1.7f, .25f),
+                new Vector3f(0, 1.7f, -.25f),
+                new Vector3f(0, 1.7f, 0)
+        );
         this.victorum = victorum;
 
         victorum.getInputManager().addMapping("forward", new KeyTrigger(KeyInput.KEY_W));
