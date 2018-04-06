@@ -10,8 +10,8 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.texture.Texture;
 
-import io.github.victorum.entity.EntityAnimal;
 import io.github.victorum.entity.EntityCube;
+import io.github.victorum.entity.EntityOstrich;
 import io.github.victorum.util.ThreadingUtil;
 import io.github.victorum.util.VAppState;
 import io.github.victorum.world.generator.WorldGenerator;
@@ -198,7 +198,7 @@ public class WorldAppState extends VAppState{
             chunkMeshes.put(chunk.getChunkCoordinates(), node);
 
             getVictorum().getEntityAppState().addEntity(
-                    new EntityCube(world, getVictorum().getAssetManager()),
+                    new EntityOstrich(world, getVictorum().getAssetManager()),
                     new Vector3f(
                             chunk.getChunkCoordinates().getChunkX()*Chunk.CHUNK_SIZE + Chunk.CHUNK_SIZE/2,
                             128,
