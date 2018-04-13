@@ -1,0 +1,22 @@
+<nifty>
+  <screen id="start">
+    <layer id="background" backgroundColor="#000f">
+      <!-- I’m not sure we even need this layer, but I’ll leave it in for now -->
+    </layer>
+    <layer id="foreground" backgroundColor="#0000" childLayout="vertical">
+      <panel id="panel_logo" width="80%" height="50%" align="center" childLayout="center" backgroundColor="#f000">
+        <image filename="Logo.png"></image>
+      </panel>
+      <panel id="panel_middle" width="80%" height="50%" align="center" childLayout="center" backgroundColor="#0f00">
+      </panel>
+      <panel id="panel_bottom" width="80%" height="50%" align="center" childLayout="horizontal" backgroundColor="#00f0">
+        <panel id="panel_start" width="50%" height="80%" valign="center" childLayout="center" backgroundColor="#ff00">
+          <control name="button" label="Start" id="StartButton" align="center" valign="center"></control>
+        </panel>
+        <panel id="panel_quit" width="50%" height="80%" valign="center" childLayout="center" backgroundColor="#f0f0">
+          <control name="button" label="Quit" id="QuitButton" align="center" valign="center"></control>
+        </panel>
+      </panel>
+    </layer>
+  </screen>
+</nifty>
