@@ -91,6 +91,8 @@ public abstract class Entity{
 
         velocity.set(x, y, z);
 
+        if(hitData.hitX || hitData.hitZ) onCollission();
+
         return hitData;
     }
 
@@ -120,9 +122,13 @@ public abstract class Entity{
     }
 
     public void jump(){
-        isOnGround = false;
-        velocity.addLocal(0, 3f, 0);
+        if(isOnGround){
+            isOnGround = false;
+            velocity.set(0, 6f, 0);
+        }
     }
+
+    public abstract void onCollission();
 
     public abstract void update(float tpf);
 

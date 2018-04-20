@@ -66,13 +66,15 @@ public class WorldModificationAppState extends VAppState implements ActionListen
     public void onAction(String label, boolean value, float f) {
         if(value) {
             updateBlockData();
-            switch (label) {
-                case "blockbreak":
-                    getVictorum().getWorldAppState().getWorld().setBlockTypeAt(blockX, blockY, blockZ, BlockRegistry.BLOCK_TYPE_AIR);
-                    break;
-                case "blockplace":
-                    getVictorum().getWorldAppState().getWorld().setBlockTypeAt(placeBlockX, placeBlockY, placeBlockZ, BlockRegistry.BLOCK_TYPE_STONE);
-                    break;
+            if(blockY >= 0 && blockY < Chunk.CHUNK_HEIGHT){
+                switch (label) {
+                    case "blockbreak":
+                        getVictorum().getWorldAppState().getWorld().setBlockTypeAt(blockX, blockY, blockZ, BlockRegistry.BLOCK_TYPE_AIR);
+                        break;
+                    case "blockplace":
+                        getVictorum().getWorldAppState().getWorld().setBlockTypeAt(placeBlockX, placeBlockY, placeBlockZ, BlockRegistry.BLOCK_TYPE_STONE);
+                        break;
+                }
             }
         }
     }

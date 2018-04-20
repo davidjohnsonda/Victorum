@@ -1,5 +1,7 @@
 package io.github.victorum.entity;
 
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 
@@ -9,7 +11,7 @@ import java.util.Random;
 
 public class EntityAnimal extends Entity{
     private static Random random = new Random(System.currentTimeMillis());
-    private float countdown = -1, jumpCountdown = 0;
+    private float countdown = -1, jumpCountdown = 0, rotation = 0;
 
     public EntityAnimal(World world, Spatial spatial){
         super(world, spatial, new Vector3f(0, 0, 0));
@@ -18,9 +20,11 @@ public class EntityAnimal extends Entity{
     @Override
     public void update(float tpf){
         if(countdown < 0f){
-            Vector3f newDirection = new Vector3f(nextFloat(), 0, nextFloat());
-            newDirection.normalizeLocal();
+            float angle = random.nextFloat()*FastMath.TWO_PI;
+            Vector3f newDirection = new Vector3f(FastMath.cos(angle), 0, -FastMath.sin(angle));
             setForwardDirection(newDirection);
+
+            getSpatial().getLocalRotation().fromAngles(0, angle, 0);
 
             Vector3f leftDirection = newDirection.cross(Vector3f.UNIT_Y);
             setLeftDirection(leftDirection);
@@ -33,11 +37,11 @@ public class EntityAnimal extends Entity{
         }else{
             countdown -= tpf;
         }
+    }
 
-        if(jumpCountdown >= 0){
-            jump();
-            jumpCountdown -= tpf;
-        }
+    @Override
+    public void onCollission() {
+        jump();
     }
 
     private float nextFloat(){

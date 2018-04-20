@@ -12,11 +12,12 @@ public class EntityOstrich extends EntityAnimal{
 
     private static Spatial createOstrich(AssetManager assetManager){
         Spatial cuteOstrich = assetManager.loadModel("ostrich.obj");
-        cuteOstrich.setLocalScale(0.25f + ostrichCutenessRandomizer.nextFloat()*5f);
+        cuteOstrich.setLocalScale(0.25f + ostrichCutenessRandomizer.nextFloat()*.5f);
         return cuteOstrich;
     }
 
     public EntityOstrich(World world, AssetManager assetManager){
         super(world, createOstrich(assetManager));
-        }
-        }
+    }
+
+}
