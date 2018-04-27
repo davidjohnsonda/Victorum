@@ -1,6 +1,6 @@
-package io.github.victorum.gui.inventory;
+package io.github.victorum.inventory.item;
 
-import io.github.victorum.block.TextureCoordinates;
+import io.github.victorum.inventory.TextureCoordinates;
 
 public final class ItemRegistry {
     public static ItemType ITEM_TYPE_EMPTY = new ItemType(0, new TextureCoordinates(0, 1));

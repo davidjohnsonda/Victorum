@@ -3,10 +3,10 @@ package io.github.victorum.world;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Mesh;
 
-import io.github.victorum.block.BlockRegistry;
-import io.github.victorum.block.BlockSide;
-import io.github.victorum.block.BlockType;
-import io.github.victorum.block.TextureCoordinates;
+import io.github.victorum.inventory.block.BlockRegistry;
+import io.github.victorum.inventory.block.BlockSide;
+import io.github.victorum.inventory.block.BlockType;
+import io.github.victorum.inventory.TextureCoordinates;
 import io.github.victorum.util.MeshGenerator;
 
 public class ChunkMeshGenerator{

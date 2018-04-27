@@ -1,6 +1,7 @@
-package io.github.victorum.block;
+package io.github.victorum.inventory.block;
 
-import io.github.victorum.block.types.BlockTypeGrass;
+import io.github.victorum.inventory.TextureCoordinates;
+import io.github.victorum.inventory.block.types.BlockTypeGrass;
 
 public final class BlockRegistry{
     public static BlockType BLOCK_TYPE_AIR = new BlockType(0, null, false);

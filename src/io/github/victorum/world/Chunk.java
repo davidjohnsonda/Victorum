@@ -1,7 +1,7 @@
 package io.github.victorum.world;
 
-import io.github.victorum.block.BlockRegistry;
-import io.github.victorum.block.BlockType;
+import io.github.victorum.inventory.block.BlockRegistry;
+import io.github.victorum.inventory.block.BlockType;
 
 import java.util.concurrent.atomic.AtomicIntegerArray;
 

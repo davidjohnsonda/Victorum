@@ -6,10 +6,9 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 
 import com.jme3.system.AppSettings;
-import com.jogamp.graph.font.Font;
 import io.github.victorum.entity.EntityAppState;
 import io.github.victorum.gui.GUIAppState;
-import io.github.victorum.gui.inventory.InventoryAppState;
+import io.github.victorum.inventory.InventoryAppState;
 import io.github.victorum.world.WorldAppState;
 import io.github.victorum.world.WorldModificationAppState;
 

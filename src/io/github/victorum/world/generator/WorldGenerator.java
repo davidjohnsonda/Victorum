@@ -1,7 +1,7 @@
 package io.github.victorum.world.generator;
 
-import io.github.victorum.block.BlockRegistry;
-import io.github.victorum.block.BlockType;
+import io.github.victorum.inventory.block.BlockRegistry;
+import io.github.victorum.inventory.block.BlockType;
 import io.github.victorum.world.Chunk;
 import io.github.victorum.world.generator.decoration.ChunkDecorationGenerator;
 import io.github.victorum.world.generator.height.NoiseFunction;

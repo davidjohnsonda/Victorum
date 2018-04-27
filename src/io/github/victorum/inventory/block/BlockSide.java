@@ -1,4 +1,4 @@
-package io.github.victorum.block;
+package io.github.victorum.inventory.block;
 
 public enum BlockSide{
     POSITIVE_X,

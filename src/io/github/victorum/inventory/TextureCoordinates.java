@@ -1,4 +1,4 @@
-package io.github.victorum.block;
+package io.github.victorum.inventory;
 
 /*
 Key to the textures (Coords listed as x,y)

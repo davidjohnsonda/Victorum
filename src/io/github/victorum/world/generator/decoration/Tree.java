@@ -1,6 +1,6 @@
 package io.github.victorum.world.generator.decoration;
 
-import io.github.victorum.block.BlockRegistry;
+import io.github.victorum.inventory.block.BlockRegistry;
 import io.github.victorum.util.MathUtil;
 import io.github.victorum.world.BlockCoordinates;
 import io.github.victorum.world.Chunk;

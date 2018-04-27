@@ -1,6 +1,9 @@
-package io.github.victorum.block;
+package io.github.victorum.inventory.block;
 
-public class BlockType {
+import io.github.victorum.inventory.InventoryRenderable;
+import io.github.victorum.inventory.TextureCoordinates;
+
+public class BlockType implements InventoryRenderable {
     private final int blockId;
     private final TextureCoordinates textureCoordinates;
     private final boolean isSolid;
@@ -27,4 +30,13 @@ public class BlockType {
         return textureCoordinates;
     }
 
+    @Override
+    public String getInventoryAtlas() {
+        return "atlas.png";
+    }
+
+    @Override
+    public TextureCoordinates getInventoryAtlasCoordinates() {
+        return getTexture(BlockSide.POSITIVE_Z);
+    }
 }

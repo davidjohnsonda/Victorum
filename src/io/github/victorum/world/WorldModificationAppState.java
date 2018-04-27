@@ -10,7 +10,7 @@ import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.math.Vector3f;
 import com.jme3.system.AppSettings;
 
-import io.github.victorum.block.BlockRegistry;
+import io.github.victorum.inventory.block.BlockRegistry;
 import io.github.victorum.util.VAppState;
 
 public class WorldModificationAppState extends VAppState implements ActionListener {

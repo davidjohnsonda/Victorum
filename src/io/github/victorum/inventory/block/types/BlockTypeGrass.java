@@ -1,8 +1,8 @@
-package io.github.victorum.block.types;
+package io.github.victorum.inventory.block.types;
 
-import io.github.victorum.block.BlockSide;
-import io.github.victorum.block.BlockType;
-import io.github.victorum.block.TextureCoordinates;
+import io.github.victorum.inventory.block.BlockSide;
+import io.github.victorum.inventory.block.BlockType;
+import io.github.victorum.inventory.TextureCoordinates;
 
 public class BlockTypeGrass extends BlockType{
     private static final TextureCoordinates TOP_COORDINATES = new TextureCoordinates(0, 0);
