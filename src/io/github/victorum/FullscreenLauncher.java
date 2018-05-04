@@ -1,5 +1,6 @@
 package io.github.victorum;
 
+import com.jme3.system.AppSettings;
 import com.jme3.system.JmeCanvasContext;
 
 import javax.swing.*;
@@ -12,7 +13,13 @@ public class FullscreenLauncher {
     }
 
     private static void launch(){
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        AppSettings appSettings = new AppSettings(true);
+        appSettings.setWidth(screenSize.width);
+        appSettings.setHeight(screenSize.height);
+
         Victorum victorum = new Victorum();
+        victorum.setSettings(appSettings);
         victorum.createCanvas();
 
         JmeCanvasContext jmeCanvasContext = (JmeCanvasContext) victorum.getContext();

@@ -32,8 +32,6 @@ public class Victorum extends SimpleApplication{
         stateManager.attach(worldModificationAppState);
         stateManager.attach(inventoryAppState);
         stateManager.attach(guiAppState);
-        flyCam.setDragToRotate(true);
-        flyCam.setMoveSpeed(16f);
         cam.setLocation(new Vector3f(0, 145, 0));
         viewPort.setBackgroundColor(ColorRGBA.Blue);
         cam.setFrustumPerspective(90, settings.getWidth() / ((float) settings.getHeight()), 0.001f, 10000);
