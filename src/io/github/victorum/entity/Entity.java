@@ -54,8 +54,7 @@ public abstract class Entity{
                 isOnGround = applyVelocitySeparately(netDirection, tpf).isHitY();
             }
         }else{
-            airAcceleration.set(netDirection);
-            airAcceleration.addLocal(0, -9.8f, 0);
+            airAcceleration.set(0, -9.8f, 0);
             velocity.addLocal(airAcceleration.multLocal(tpf));
             isOnGround = applyVelocitySeparately(velocity, tpf).isHitY();
         }
@@ -124,7 +123,7 @@ public abstract class Entity{
     public void jump(){
         if(isOnGround){
             isOnGround = false;
-            velocity.set(0, 6f, 0);
+            velocity.set(velocity.x, 6f, velocity.z);
         }
     }
 

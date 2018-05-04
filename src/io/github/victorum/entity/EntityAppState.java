@@ -9,11 +9,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class EntityAppState extends VAppState{
+    private PlayerEntity playerEntity;
     private ArrayList<Entity> entityArrayList = new ArrayList<>();
 
     @Override
     protected void initialize(Application application) {
-        addEntity(new PlayerEntity(getVictorum()), new Vector3f(0, 256, 0));
+        playerEntity = new PlayerEntity(getVictorum());
+        addEntity(playerEntity, new Vector3f(0, 256, 0));
     }
 
     @Override
@@ -51,6 +53,10 @@ public class EntityAppState extends VAppState{
         entity.getSpatial().setLocalTranslation(location);
         getVictorum().getRootNode().attachChild(entity.getSpatial());
         entityArrayList.add(entity);
+    }
+
+    public PlayerEntity getPlayerEntity(){
+        return playerEntity;
     }
 
 }

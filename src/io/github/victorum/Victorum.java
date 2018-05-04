@@ -4,8 +4,8 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.font.BitmapFont;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
-
 import com.jme3.system.AppSettings;
+
 import io.github.victorum.entity.EntityAppState;
 import io.github.victorum.gui.GUIAppState;
 import io.github.victorum.inventory.InventoryAppState;
