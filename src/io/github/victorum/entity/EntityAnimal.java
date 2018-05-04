@@ -40,7 +40,7 @@ public class EntityAnimal extends Entity{
     }
 
     @Override
-    public void onCollission() {
+    public void onCollision() {
         jump();
     }
 

@@ -49,9 +49,9 @@ public abstract class Entity{
         netDirection.normalizeLocal();
 
         if(isOnGround){
-            velocity.set(netDirection.mult(10f));
+            velocity.set(netDirection.mult(10));
             if(velocity.length() != 0){
-                isOnGround = applyVelocitySeparately(netDirection, tpf).isHitY();
+                isOnGround = applyVelocitySeparately(velocity, tpf).isHitY();
             }
         }else{
             airAcceleration.set(0, -9.8f, 0);
@@ -90,7 +90,7 @@ public abstract class Entity{
 
         velocity.set(x, y, z);
 
-        if(hitData.hitX || hitData.hitZ) onCollission();
+        if(hitData.hitX || hitData.hitZ) onCollision();
 
         return hitData;
     }
@@ -127,7 +127,7 @@ public abstract class Entity{
         }
     }
 
-    public abstract void onCollission();
+    public abstract void onCollision();
 
     public abstract void update(float tpf);
 
@@ -218,5 +218,7 @@ public abstract class Entity{
             return hitZ;
         }
     }
+
+
 
 }

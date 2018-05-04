@@ -65,6 +65,6 @@ public class PlayerEntity extends Entity implements ActionListener{
     }
 
     @Override
-    public void onCollission() {}
+    public void onCollision() {}
 
 }
