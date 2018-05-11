@@ -49,6 +49,7 @@ public class Victorum extends SimpleApplication{
     @Override
     public void stop(){
         super.stop();
+        worldAppState.cleanup();
         System.exit(0); //necessary because of background threads in io.github.victorum.util.ThreadingUtil
     }
 

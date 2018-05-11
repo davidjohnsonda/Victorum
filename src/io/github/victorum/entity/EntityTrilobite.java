@@ -9,18 +9,14 @@ import java.util.Random;
 public class EntityTrilobite extends EntityAnimal{
     private static final Random triloCutenessRandomizer = new Random();
 
-    private static Spatial create(AssetManager assetManager){
-        Spatial trilobite = assetManager.loadModel("trilo.obj");
-        trilobite.setLocalScale(0.25f + triloCutenessRandomizer.nextFloat()*.5f);
-        return trilobite;
+    private static Spatial createOstrich(AssetManager assetManager){
+        Spatial cuteOstrich = assetManager.loadModel("trilo.obj");
+        cuteOstrich.setLocalScale(0.25f + triloCutenessRandomizer.nextFloat()*.5f);
+        return cuteOstrich;
     }
 
     public EntityTrilobite(World world, AssetManager assetManager){
-<<<<<<< HEAD
-        super(world, create(assetManager));
-=======
         super(world, createOstrich(assetManager), false);
->>>>>>> 008b1c2a883b0288d9ef777b99ecbdef86157f95
     }
 
 }

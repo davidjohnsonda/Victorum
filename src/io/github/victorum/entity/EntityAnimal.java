@@ -39,7 +39,7 @@ public class EntityAnimal extends Entity{
             countdown -= tpf;
         }
 
-        if(isUnderwater()) jump();
+        if(isUnderwater() && isSwim()) jump();
     }
 
     @Override

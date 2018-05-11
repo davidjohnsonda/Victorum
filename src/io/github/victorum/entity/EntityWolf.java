@@ -9,18 +9,14 @@ import java.util.Random;
 public class EntityWolf extends EntityAnimal{
     private static final Random wolfCutenessRandomizer = new Random();
 
-    private static Spatial create(AssetManager assetManager){
-        Spatial wolf = assetManager.loadModel("wolf.obj");
-        wolf.setLocalScale(0.25f + wolfCutenessRandomizer.nextFloat()*.5f);
-        return wolf;
+    private static Spatial createOstrich(AssetManager assetManager){
+        Spatial cuteOstrich = assetManager.loadModel("wolf.obj");
+        cuteOstrich.setLocalScale(0.25f + wolfCutenessRandomizer.nextFloat()*.5f);
+        return cuteOstrich;
     }
 
     public EntityWolf(World world, AssetManager assetManager){
-<<<<<<< HEAD
-        super(world, create(assetManager));
-=======
         super(world, createOstrich(assetManager), true);
->>>>>>> 008b1c2a883b0288d9ef777b99ecbdef86157f95
     }
 
 }

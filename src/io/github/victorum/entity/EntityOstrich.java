@@ -10,18 +10,14 @@ import java.util.Random;
 public class EntityOstrich extends EntityAnimal{
     private static final Random ostrichCutenessRandomizer = new Random();
 
-    private static Spatial create(AssetManager assetManager){
+    private static Spatial createOstrich(AssetManager assetManager){
         Spatial cuteOstrich = assetManager.loadModel("ostrich.obj");
         cuteOstrich.setLocalScale(0.25f + ostrichCutenessRandomizer.nextFloat()*.5f);
         return cuteOstrich;
     }
 
     public EntityOstrich(World world, AssetManager assetManager){
-<<<<<<< HEAD
-        super(world, create(assetManager));
-=======
         super(world, createOstrich(assetManager), true);
->>>>>>> 008b1c2a883b0288d9ef777b99ecbdef86157f95
     }
 
 }

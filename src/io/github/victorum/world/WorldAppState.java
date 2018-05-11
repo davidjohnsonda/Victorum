@@ -15,13 +15,19 @@ import io.github.victorum.util.ThreadingUtil;
 import io.github.victorum.util.VAppState;
 import io.github.victorum.world.generator.WorldGenerator;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class WorldAppState extends VAppState{
     private static final long CHUNK_TICK_INTERVAL_MS = 25;
     private static final int VIEW_DISTANCE = 16;
+    private final File worldFolder = new File("world");
     private final World world = new World();
     private final WorldGenerator worldGenerator = new WorldGenerator();
     private final HashMap<ChunkCoordinates, Node> chunkMeshes = new HashMap<>();
@@ -39,11 +45,29 @@ public class WorldAppState extends VAppState{
         chunkMaterial.setTexture("ColorMap", textureAtlas);
         chunkMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
         chunkMaterial.getAdditionalRenderState().setFaceCullMode(RenderState.FaceCullMode.Off);
+        if(!worldFolder.exists()) worldFolder.mkdirs();
     }
 
     @Override
     protected void cleanup(Application application){
+        LinkedList<Future> futureArrayList = new LinkedList<>();
 
+        for(Map.Entry<ChunkCoordinates, Chunk> entry : world.getChunkData().entrySet()){
+            if(entry.getValue().isModified()){
+                Future future = ThreadingUtil.EXECUTOR_SERVICE.submit(() -> {
+                    File chunkFile = new File(worldFolder, entry.getValue().getChunkCoordinates().getChunkX() + "_" + entry.getValue().getChunkCoordinates().getChunkZ() + ".bin");
+                    entry.getValue().save(chunkFile);
+                    System.out.println("Saved: " + chunkFile.getAbsolutePath());
+                });
+                futureArrayList.add(future);
+            }
+        }
+
+        for(Future future : futureArrayList){
+            try {
+                future.get();
+            }catch(InterruptedException | ExecutionException e){}
+        }
     }
 
     @Override
@@ -107,7 +131,10 @@ public class WorldAppState extends VAppState{
                 Node node = chunkMeshes.get(entry.getKey());
                 if(node != null) getVictorum().getRootNode().detachChild(node);
                 chunkMeshes.remove(entry.getKey());
-                world.getChunkData().remove(entry.getKey());
+                ThreadingUtil.IO_SERVICE.submit(() -> {
+                    File chunkFile = new File(worldFolder, entry.getValue().getChunkCoordinates().getChunkX() + "_" + entry.getValue().getChunkCoordinates().getChunkZ() + ".bin");
+                    entry.getValue().save(chunkFile);
+                });
             }
         }
     }
@@ -126,7 +153,7 @@ public class WorldAppState extends VAppState{
 
     private void requestChunkData(Chunk chunk){
         chunk.setStatus(ChunkStatus.AWAITING_DATA);
-        ThreadingUtil.EXECUTOR_SERVICE.submit(() -> loadChunkData(chunk));
+        ThreadingUtil.IO_SERVICE.submit(() -> loadChunkData(chunk));
     }
 
     private int requestMeshRefresh(Chunk chunk){
@@ -154,7 +181,17 @@ public class WorldAppState extends VAppState{
 
     private void loadChunkData(Chunk chunk){
         if(chunk.getStatus() == ChunkStatus.UNLOADED) return;
-        worldGenerator.generateChunk(chunk);
+
+        File chunkFile = new File(worldFolder, chunk.getChunkCoordinates().getChunkX() + "_" + chunk.getChunkCoordinates().getChunkZ() + ".bin");
+        if(chunkFile.exists()){
+            chunk.load(chunkFile);
+            System.out.println(chunkFile.getAbsoluteFile() + " exists");
+        }else{
+            System.out.println(chunkFile.getAbsoluteFile() + " no exists");
+            worldGenerator.generateChunk(chunk);
+        }
+
+        chunk.setModified(false);
         chunk.setStatus(ChunkStatus.HOLDING_DATA);
     }
 

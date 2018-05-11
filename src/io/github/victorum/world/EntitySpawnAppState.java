@@ -15,7 +15,7 @@ public class EntitySpawnAppState extends VAppState {
     public void update(float secondsPerLastFrame) {
         counter += secondsPerLastFrame;
 
-        if(counter >= .350) {
+        if(counter >= .500) {
             Entity newAnimal = null;
 
             int determinant = random.nextInt(5);
@@ -38,13 +38,13 @@ public class EntitySpawnAppState extends VAppState {
                     break;
             }
 
-            getVictorum().getEntityAppState().addEntity(newAnimal, randomizedLocation(newAnimal));
+            getVictorum().getEntityAppState().addEntity(newAnimal, randomizedLocation());
 
             counter = 0;
         }
     }
 
-    private Vector3f randomizedLocation(Entity animal) {
+    private Vector3f randomizedLocation() {
         // If it's water, loop and pick a new location
 
         Chunk loadedChunk = getVictorum().getWorldAppState().getWorld().getRandomLoadedChunk(random);
