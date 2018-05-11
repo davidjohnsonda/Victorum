@@ -6,7 +6,7 @@ import io.github.victorum.world.World;
 
 import java.util.Random;
 
-public class EntityBoring extends EntityAnimal{
+public class EntityTrilobite extends EntityAnimal{
     private static final Random triloUglynessRandomizer = new Random();
 
     private static Spatial createOstrich(AssetManager assetManager){
@@ -15,7 +15,7 @@ public class EntityBoring extends EntityAnimal{
         return cuteOstrich;
     }
 
-    public EntityBoring(World world, AssetManager assetManager){
+    public EntityTrilobite(World world, AssetManager assetManager){
         super(world, createOstrich(assetManager));
     }
 
