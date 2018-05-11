@@ -49,7 +49,7 @@ public abstract class Entity{
         netDirection.normalizeLocal();
 
         if(isOnGround){
-            velocity.set(netDirection.mult(10));
+            velocity.set(netDirection.mult(3));
             if(velocity.length() != 0){
                 isOnGround = applyVelocitySeparately(velocity, tpf).isHitY();
             }
@@ -123,7 +123,7 @@ public abstract class Entity{
     public void jump(){
         if(isOnGround){
             isOnGround = false;
-            velocity.set(velocity.x, 6f, velocity.z);
+            velocity.set(velocity.x, 5f, velocity.z);
         }
     }
 
