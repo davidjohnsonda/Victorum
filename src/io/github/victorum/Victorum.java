@@ -9,10 +9,12 @@ import com.jme3.system.AppSettings;
 import io.github.victorum.entity.EntityAppState;
 import io.github.victorum.gui.GUIAppState;
 import io.github.victorum.inventory.InventoryAppState;
+import io.github.victorum.world.EntitySpawnAppState;
 import io.github.victorum.world.WorldAppState;
 import io.github.victorum.world.WorldModificationAppState;
 
 public class Victorum extends SimpleApplication{
+    private final EntitySpawnAppState entitySpawnAppState = new EntitySpawnAppState();
     private final WorldAppState worldAppState = new WorldAppState();
     private final EntityAppState entityAppState = new EntityAppState();
     private final WorldModificationAppState worldModificationAppState = new WorldModificationAppState();
@@ -32,6 +34,7 @@ public class Victorum extends SimpleApplication{
         stateManager.attach(worldModificationAppState);
         stateManager.attach(inventoryAppState);
         stateManager.attach(guiAppState);
+        stateManager.attach(entitySpawnAppState);
         cam.setLocation(new Vector3f(0, 145, 0));
         viewPort.setBackgroundColor(ColorRGBA.Blue);
         cam.setFrustumPerspective(90, settings.getWidth() / ((float) settings.getHeight()), 0.001f, 10000);

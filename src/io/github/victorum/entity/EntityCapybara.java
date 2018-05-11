@@ -10,7 +10,7 @@ public class EntityCapybara extends EntityAnimal{
     private static final Random capybaraCutenessRandomizer = new Random();
 
     private static Spatial createOstrich(AssetManager assetManager){
-        Spatial cuteOstrich = assetManager.loadModel("caybara.obj");
+        Spatial cuteOstrich = assetManager.loadModel("capybara.obj");
         cuteOstrich.setLocalScale(0.25f + capybaraCutenessRandomizer.nextFloat()*.5f);
         return cuteOstrich;
     }

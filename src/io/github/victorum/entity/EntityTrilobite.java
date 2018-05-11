@@ -7,11 +7,11 @@ import io.github.victorum.world.World;
 import java.util.Random;
 
 public class EntityTrilobite extends EntityAnimal{
-    private static final Random triloUglynessRandomizer = new Random();
+    private static final Random triloCutenessRandomizer = new Random();
 
     private static Spatial createOstrich(AssetManager assetManager){
         Spatial cuteOstrich = assetManager.loadModel("trilo.obj");
-        cuteOstrich.setLocalScale(0.25f + triloUglynessRandomizer.nextFloat()*.5f);
+        cuteOstrich.setLocalScale(0.25f + triloCutenessRandomizer.nextFloat()*.5f);
         return cuteOstrich;
     }
 

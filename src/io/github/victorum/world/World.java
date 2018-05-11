@@ -3,6 +3,10 @@ package io.github.victorum.world;
 import io.github.victorum.inventory.block.BlockRegistry;
 import io.github.victorum.inventory.block.BlockType;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class World{
@@ -47,6 +51,14 @@ public class World{
 
     public ConcurrentHashMap<ChunkCoordinates, Chunk> getChunkData(){
         return chunkData;
+    }
+
+    public Chunk getRandomLoadedChunk(Random random) {
+        Set<Map.Entry<ChunkCoordinates, Chunk>> entrySet = chunkData.entrySet();
+        int id = random.nextInt(entrySet.size());
+        Iterator<Map.Entry<ChunkCoordinates, Chunk>> it = entrySet.iterator();
+        for(int i = 0; i< id - 1; ++i){ it.next(); }
+        return it.next().getValue();
     }
 
 }

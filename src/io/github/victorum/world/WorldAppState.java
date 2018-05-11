@@ -10,7 +10,6 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.texture.Texture;
 
-import io.github.victorum.entity.EntityCube;
 import io.github.victorum.entity.EntityOstrich;
 import io.github.victorum.util.ThreadingUtil;
 import io.github.victorum.util.VAppState;
@@ -197,6 +196,7 @@ public class WorldAppState extends VAppState{
 
             chunkMeshes.put(chunk.getChunkCoordinates(), node);
 
+            /*
             getVictorum().getEntityAppState().addEntity(
                     new EntityOstrich(world, getVictorum().getAssetManager()),
                     new Vector3f(
@@ -205,6 +205,7 @@ public class WorldAppState extends VAppState{
                             chunk.getChunkCoordinates().getChunkZ()*Chunk.CHUNK_SIZE + Chunk.CHUNK_SIZE/2
                     )
             );
+             */
         }else{
             Geometry mainGeometry = (Geometry)node.getChild("Main");
             Geometry waterGeometry = (Geometry)node.getChild("Water");
