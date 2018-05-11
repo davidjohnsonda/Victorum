@@ -9,14 +9,14 @@ import java.util.Random;
 public class EntityPig extends EntityAnimal{
     private static final Random pigCutenessRandomizer = new Random();
 
-    private static Spatial createOstrich(AssetManager assetManager){
-        Spatial cuteOstrich = assetManager.loadModel("pig.obj");
-        cuteOstrich.setLocalScale(0.25f + pigCutenessRandomizer.nextFloat()*.5f);
-        return cuteOstrich;
+    private static Spatial create(AssetManager assetManager){
+        Spatial pig = assetManager.loadModel("pig.obj");
+        pig.setLocalScale(0.25f + pigCutenessRandomizer.nextFloat()*.5f);
+        return pig;
     }
 
     public EntityPig(World world, AssetManager assetManager){
-        super(world, createOstrich(assetManager));
+        super(world, create(assetManager));
     }
 
 }

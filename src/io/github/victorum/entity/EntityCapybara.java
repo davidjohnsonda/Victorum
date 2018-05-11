@@ -9,14 +9,14 @@ import java.util.Random;
 public class EntityCapybara extends EntityAnimal{
     private static final Random capybaraCutenessRandomizer = new Random();
 
-    private static Spatial createOstrich(AssetManager assetManager){
-        Spatial cuteOstrich = assetManager.loadModel("capybara.obj");
-        cuteOstrich.setLocalScale(0.25f + capybaraCutenessRandomizer.nextFloat()*.5f);
-        return cuteOstrich;
+    private static Spatial create(AssetManager assetManager){
+        Spatial capybara = assetManager.loadModel("capybara.obj");
+        capybara.setLocalScale(0.25f + capybaraCutenessRandomizer.nextFloat()*.5f);
+        return capybara;
     }
 
     public EntityCapybara(World world, AssetManager assetManager){
-        super(world, createOstrich(assetManager));
+        super(world, create(assetManager));
     }
 
 }
