@@ -3,6 +3,8 @@ package io.github.victorum.entity;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 
+import io.github.victorum.inventory.block.BlockRegistry;
+import io.github.victorum.inventory.block.BlockType;
 import io.github.victorum.world.BlockCoordinates;
 import io.github.victorum.world.ChunkCoordinates;
 import io.github.victorum.world.World;
@@ -121,10 +123,18 @@ public abstract class Entity{
     }
 
     public void jump(){
-        if(isOnGround){
+        if(isOnGround || isUnderwater()){
             isOnGround = false;
             velocity.set(velocity.x, 5f, velocity.z);
         }
+    }
+
+    public boolean isUnderwater(){
+        int x = (int)getSpatial().getLocalTranslation().getX();
+        int y = (int)getSpatial().getLocalTranslation().getY();
+        int z = (int)getSpatial().getLocalTranslation().getZ();
+        y+=2;
+        return world.getBlockTypeAt(x, y, z).getBlockId() == BlockRegistry.BLOCK_TYPE_WATER.getBlockId();
     }
 
     public abstract void onCollision();

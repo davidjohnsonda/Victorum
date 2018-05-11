@@ -17,7 +17,11 @@ public class EntityOstrich extends EntityAnimal{
     }
 
     public EntityOstrich(World world, AssetManager assetManager){
+<<<<<<< HEAD
         super(world, create(assetManager));
+=======
+        super(world, createOstrich(assetManager), true);
+>>>>>>> 008b1c2a883b0288d9ef777b99ecbdef86157f95
     }
 
 }

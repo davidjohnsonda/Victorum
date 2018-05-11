@@ -16,7 +16,11 @@ public class EntityTrilobite extends EntityAnimal{
     }
 
     public EntityTrilobite(World world, AssetManager assetManager){
+<<<<<<< HEAD
         super(world, create(assetManager));
+=======
+        super(world, createOstrich(assetManager), false);
+>>>>>>> 008b1c2a883b0288d9ef777b99ecbdef86157f95
     }
 
 }
