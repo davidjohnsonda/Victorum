@@ -16,7 +16,7 @@ public class EntityPig extends EntityAnimal{
     }
 
     public EntityPig(World world, AssetManager assetManager){
-        super(world, createOstrich(assetManager));
+        super(world, createOstrich(assetManager), true);
     }
 
 }

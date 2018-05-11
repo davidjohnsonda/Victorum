@@ -17,7 +17,7 @@ public class EntityOstrich extends EntityAnimal{
     }
 
     public EntityOstrich(World world, AssetManager assetManager){
-        super(world, createOstrich(assetManager));
+        super(world, createOstrich(assetManager), true);
     }
 
 }

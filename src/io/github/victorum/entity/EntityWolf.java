@@ -16,7 +16,7 @@ public class EntityWolf extends EntityAnimal{
     }
 
     public EntityWolf(World world, AssetManager assetManager){
-        super(world, createOstrich(assetManager));
+        super(world, createOstrich(assetManager), true);
     }
 
 }

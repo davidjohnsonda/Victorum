@@ -16,7 +16,7 @@ public class EntityCapybara extends EntityAnimal{
     }
 
     public EntityCapybara(World world, AssetManager assetManager){
-        super(world, createOstrich(assetManager));
+        super(world, createOstrich(assetManager), true);
     }
 
 }
