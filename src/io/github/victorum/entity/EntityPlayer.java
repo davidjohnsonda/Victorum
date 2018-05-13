@@ -9,10 +9,10 @@ import com.jme3.scene.Node;
 
 import io.github.victorum.Victorum;
 
-public class PlayerEntity extends Entity implements ActionListener{
+public class EntityPlayer extends Entity implements ActionListener{
     private final Victorum victorum;
 
-    public PlayerEntity(Victorum victorum){
+    public EntityPlayer(Victorum victorum){
         super(victorum.getWorldAppState().getWorld(), new Node(),
                 new Vector3f(.25f, 0, 0),
                 new Vector3f(-.25f, 0, 0),

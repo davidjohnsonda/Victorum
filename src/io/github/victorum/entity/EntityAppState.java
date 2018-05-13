@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class EntityAppState extends VAppState{
-    private PlayerEntity playerEntity;
+    private EntityPlayer entityPlayer;
     private ArrayList<Entity> entityArrayList = new ArrayList<>();
 
     @Override
     protected void initialize(Application application) {
-        playerEntity = new PlayerEntity(getVictorum());
-        addEntity(playerEntity, new Vector3f(0, 256, 0));
+        entityPlayer = new EntityPlayer(getVictorum());
+        addEntity(entityPlayer, new Vector3f(0, 256, 0));
     }
 
     @Override
@@ -55,8 +55,8 @@ public class EntityAppState extends VAppState{
         entityArrayList.add(entity);
     }
 
-    public PlayerEntity getPlayerEntity(){
-        return playerEntity;
+    public EntityPlayer getEntityPlayer(){
+        return entityPlayer;
     }
 
 }
